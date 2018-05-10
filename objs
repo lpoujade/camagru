@@ -1,0 +1,16 @@
+
+User
+id,username,mail
+	->new(infos)
+	->mod(what,value)
+	->sendmail(token)
+Creation
+	->getAll(how=5,index=5) // sorted by date
+	->get(id)
+	->getComments()
+Comment
+id,text
+	->getfor
+Token
+	->verify(token,user_id) // check in db
+	->new(User/user_id) // save in db
