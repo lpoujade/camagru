@@ -58,39 +58,12 @@ class Router {
 			exit ;
 		}
 		foreach ($this->urls[$method] as $url => $func) {
-			if (preg_match($url, $req_uri)) {
+			if (preg_match("/^\/$url$/", $req_uri)) {
 				return $func($req_uri);
 			}
 		}
+		http_response_code(404);
 		echo render('home', ['content' => '<h1>404</h1>']);
 	}
-
-	/*
-	public function respond($full_req) {
-		$method = "";
-		if ($_SERVER['REQUEST_METHOD'] === "GET")
-			$method = "get";
-		else if ($_SERVER['REQUEST_METHOD'] === "POST")
-			$method = "post";
-		else {
-			echo "unknow method";
-			exit ;
-		}
-
-		$r = explode('/', $full_req);
-		foreach ($r as $k => $v) {
-			$r[$k] = "/".$v;
-		}
-		$req = ($r[1] ?: $r[0]);
-		if (!array_key_exists($req, $this->urls)) {
-			$ret = "<h1>404</h1><br />";
-			//$ret .= $this->urls['get']["/getinfo"]($full_req);
-			return $ret;
-		}
-		array_shift($r);
-		array_shift($r);
-		return $this->urls[$method][$req]($r);
-	}
-	 */
 }
 		

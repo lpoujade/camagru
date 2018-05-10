@@ -1,50 +1,39 @@
 
-<div class="card">
-<form id="form_log" class="card-body">
-	<h3 class="card-title">Connect</h3>
-	<div class="form-group">
-		<input type="text" class="form-control" id="mail" aria-describedby="emailHelp" placeholder="Enter email">
-	</div>
-	<div class="form-group">
-		<input type="password" class="form-control" id="pass" placeholder="Password">
-	</div>
-	<div class="form-group form-check">
-		<input type="checkbox" class="form-check-input" id="exampleCheck1">
-		<label class="form-check-label" for="exampleCheck1">Check me out</label>
-	</div>
-</form>
-<button id="btn_log" class="btn btn-primary">Submit</button>
-</div>
+<div class="row">
 
-<div class="card">
-<form id="form_register" class="card-body">
-	<h3 class="card-title">Register</h3>
-	<div class="form-group">
-		<label for="exampleInputEmail1">Username</label>
-		<input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
-	</div>
-	<div class="form-group">
-		<label for="exampleInputEmail1">Email address</label>
-		<input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
-	</div>
-	<div class="form-group">
-		<label for="exampleInputEmail1">Email confirmation</label>
-		<input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
-	</div>
-	<div class="form-group">
-		<label for="exampleInputPassword1">Password</label>
-		<input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
-	</div>
-	<div class="form-group">
-		<label for="exampleInputPassword1">Password confirmation</label>
-		<input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
-	</div>
-	<div class="form-group form-check">
-		<input type="checkbox" class="form-check-input" id="exampleCheck1">
-		<label class="form-check-label" for="exampleCheck1">Check me out</label>
-	</div>
-	<button type="submit" class="btn btn-primary">Submit</button>
-</form>
+	<form id="form_log" class="col s6" action="#">
+		<h3 class="card-title">Connect</h3>
+
+		<label for="username">Username</label>
+		<input type="text" class="form-control" id="mail" aria-describedby="emailHelp" placeholder="Enter email">
+
+		<label for="pass">Password</label>
+		<input type="password" class="form-control" id="pass" placeholder="Password">
+
+		<button id="btn_log" class="btn">Submit</button>
+	</form>
+
+	<form id="form_register" class="col s6" action="#">
+		<h3 class="card-title">Register</h3>
+
+		<label for="username">Username</label>
+		<input type="text" id="username" aria-describedby="emailHelp" placeholder="Enter email">
+
+		<label for="mail">Email address</label>
+		<input type="email" id="mail" aria-describedby="emailHelp" placeholder="Enter email">
+
+		<label for="mail_confirmation">Email confirmation</label>
+		<input type="email" id="mail_confirmation" aria-describedby="emailHelp" placeholder="Enter email">
+
+		<label for="pass">Password</label>
+		<input type="password" id="pass" placeholder="Password">
+
+		<label for="pass_confirmation">Password confirmation</label>
+		<input type="password" id="pass_confirmation" placeholder="Password">
+
+		<button type="submit" class="btn">Submit</button>
+	</form>
+
 </div>
 
 <script src="js/form_to_xhr.js"></script>
