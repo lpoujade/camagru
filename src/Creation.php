@@ -11,6 +11,12 @@ class Creation {
 		$this->image = $image;
 	}
 
+	public function toArray() {
+		return ['id' => $this->id,
+			'name' => $this->name,
+			'image' => $this->image];
+	}
+
 	public function getid() {
 		return $this->id;
 	}
@@ -41,5 +47,13 @@ class Creation {
 		$fake[] = new Creation(13, 'go go go', 'path/to/img');
 		$fake[] = new Creation(75, 'godmod', 'path/to/img');
 		return $fake;
+	}
+
+	public function jsonify(array $creations) {
+		$r = [];
+		foreach ($creations as $c) {
+			$r[] = $c->toArray();
+		};
+		return json_encode($r);
 	}
 }

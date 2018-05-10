@@ -2,13 +2,16 @@
 
 $gallery = function(string $url="") {
 	$creations = Creation::getAll();
+	header("Content-type:application/json");
+	echo Creation::jsonify($creations);
+	/*
 	foreach($creations as $c) {
 		$data .= render('gallery',
 			['item_id' => $c->getid(),
 			'name' => $c->getname(),
 			'image' => $c->getimage()]);
 	}
-	echo render('home', ['content' => $data]);
+	 */
 };
 
 $userPage = function($data=null) {
@@ -19,9 +22,10 @@ $userPage = function($data=null) {
 };
 
 $logPage = function(string $url="") {
-	//printData($_SERVER);
-	$content = render('log', []);
-	echo render('home', ['content' => $content]);
+	if ($_SESSION['is_connected'] == true)
+		echo "ok";
+	else
+		echo "no";
 };
 
 $accountPage = function(string $url="") {
@@ -29,8 +33,10 @@ $accountPage = function(string $url="") {
 		header('Location: /log');
 		die ;
 	}
-	echo "hi ".$_SESSION['user'];
+	echo $_SESSION['user'];
 };
+
+/* POST */
 
 $logUser = function(string $url="") {
 	$user = User::connect($_POST['mail'], $_POST['pass']);
@@ -44,8 +50,6 @@ $logUser = function(string $url="") {
 };
 
 $newUser = function(string $url="") {
-	$new_user = new User();
-	//echo json_encode([$_POST, $new_user]);
-	echo json_encode($new_user);
+	//$new_user = new User();
 };
 

@@ -66,4 +66,3 @@ class Router {
 		echo render('home', ['content' => '<h1>404</h1>']);
 	}
 }
-		

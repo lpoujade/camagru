@@ -13,16 +13,21 @@ if (session_start() === false) {
 	exit ;
 }
 
+$interface = function() {
+	echo file_get_contents('templates/home.html');
+};
 
 $website['router'] = new Router();
 $website['router']->get([
-	"" => $gallery,
+	"" => $interface,
+	"gallery" => $gallery,
 	"user" => $userPage,
 	"log" => $logPage,
 	"account" => $accountPage,
 	"flush_session" => function() {
-		foreach ($_SESSION as $i)
+		foreach ($_SESSION as $i => $v)
 			$_SESSION[$i] = null;
+		header('Location: /account');
 	}]);
 
 $website['router']->post([
