@@ -1,12 +1,11 @@
 <?php
 
-include_once("config/database.php");
-
-include_once("src/utils.php");
-include_once("src/generic_classes.php");
-include_once("src/routes.php");
-include_once("src/Creation.php");
-include_once("src/User.php");
+require_once("config/database.php");
+require_once("src/utils.php");
+require_once("src/generic_classes.php");
+require_once("src/routes.php");
+require_once("src/Creation.php");
+require_once("src/User.php");
 
 if (session_start() === false) {
 	echo "failed to start session ?";
@@ -27,7 +26,7 @@ $website['router']->get([
 	"flush_session" => function() {
 		foreach ($_SESSION as $i => $v)
 			$_SESSION[$i] = null;
-		header('Location: /account');
+		return json_encode('ok');
 	}]);
 
 $website['router']->post([

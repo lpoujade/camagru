@@ -2,32 +2,54 @@ function api_get(url, callback) {
 	var xhr = new XMLHttpRequest();
 	xhr.open('GET', url);
 	xhr.addEventListener('load', function() {
-		callback(xhr.response);
+	console.log('received from ' + url);
+		if (callback)
+			callback(JSON.parse(xhr.response));
 	});
+	console.log('api_get ' + url);
 	xhr.send();
 }
 
-var handler = {'gallery': function() {
-	console.log('in gallery');
+function show_elem(elem) {
+	/* hide other sections */
+	var sections = document.getElementsByTagName('section');
+	var i = 0;
+	while (i < sections.length) {
+		sections[i].style.display = "none";
+		i++;
+	}
+	var e = document.getElementById(elem);
+	if (e)
+		e.style.display = "";
+}
+
+handler = {'gallery': function() {
+	show_elem('s_gallery');
 	api_get("/gallery", function(response) {
-		var d = JSON.parse(response);
-		for (i in d) {
-			console.log(d[i]);
-			var div = document.createElement('div');
-			div.innerHTML = d[i].name;
+		for (i in response) {
+			var ac_div = document.getElementById('d_img_0');
+			var div = ac_div.cloneNode(true);
+			div.id = 'd_img_' + response[i].id;
+			div.getElementsByTagName('span')[0].innerHTML = response[i].image;
 			s_gallery.appendChild(div);
 		}
 	});
 },
 	'create': function() {
-		console.log('in create');
+		show_elem('s_create');
+	},
+	'logout': function() {
+		api_get('/flush_session', null);
+		window.handler['account']();
 	},
 	'account': function() {
-		console.log('in account');
+		show_elem('s_account');
 		var co = api_get('/log', function(response) {
-			if (response == "ok") {
+			console.log(response);
+			if (response.status == 1) {
 				d_account.style.display = "";
 				d_logform.style.display = "none";
+				span_username.innerHTML = response.user;
 			} else {
 				d_account.style.display = "none";
 				d_logform.style.display = "";
@@ -38,19 +60,10 @@ var handler = {'gallery': function() {
 };
 
 function get_page_content() {
-	/* hide other sections */
-	var sections = document.getElementsByTagName('section');
-	var i = 0;
-	while (i < sections.length) {
-		sections[i].style.display = "none";
-		i++;
-	}
 	var name = this.href.split('#')[1];
-	var e = document.getElementById('s_' + name);
-	e.style.display = "";
 	handler[name]();
 }
 
-var menu_links = [a_gallery, a_create, a_account];
+var menu_links = [a_gallery, a_create, a_account, a_logout];
 for(i in menu_links)
 	menu_links[i].addEventListener('click', get_page_content);

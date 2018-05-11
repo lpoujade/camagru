@@ -40,18 +40,83 @@ class User {
 		$this->username = $value;
 	}
 
+	public function getmail() {
+		return $this->mail;
+	}
+
+	public function setmail($value) {
+		/* confirmation mail */
+		$this->confirmed = false;
+		$this->mail = $value;
+	}
+
+	public function sethash($pass) {
+		/* hash pass */
+		$this->salt = 'lol';
+		$this->hash =  hash('whirlpool', $pass.$this->salt);
+	}
+
+	public function gethash() {
+		return $this->hash;
+	}
+
+	public function setsalt($salt) {
+		$this->salt = $salt;
+	}
+
+	public function getsalt() {
+		return $this->salt;
+	}
+
+	public function setconfirmed($confirmed) {
+		$this->confirmed = $confirmed;
+	}
+
+	public function getconfirmed() {
+		return $this->confirmed;
+	}
+
 	public function connect($mail, $pass) {
 		global $db;
-		$r = $db->query("select id,hash from users where mail='$mail'");
+		$r = $db->query("select id,hash,salt from users where mail='$mail'");
 		$res = $r->fetchAll();
 		if (count($r) != 1) {
 			echo "fail?";
 			die ;
 		}
 		$hash = $res[0]['hash'];
+		$salt = $res[0]['salt'];
 		$id = $res[0]['id'];
-		if (!strcmp($hash, $pass))
+		if (!strcmp($hash, hash('whirlpool', $pass.$salt)))
 			return new User($id);
-		return false;
+		return null;
+	}
+
+	public function checkmail($mail) {
+		global $db;
+
+		$r = $db->query("select id from users where mail='$mail'")->fetchAll();
+		if (count($r) > 0) {
+			return false;
+		}
+		return true;
+
+	}
+
+	public function create($mail, $pass, $username) {
+		$user = new User();
+		if (User::checkmail($mail) === false)
+			return null;
+		$user->setusername($username);
+		$user->setmail($mail);
+		$user->sethash($pass);
+		$user->setconfirmed(0);
+		return $user;
+	}
+
+	public function save(User $user) {
+		global $db;
+		return $db->exec("insert into users values
+		   	(NULL, {$user->getconfirmed()}, '{$user->getusername()}', '{$user->getmail()}', '{$user->gethash()}', '{$user->getsalt()}');");
 	}
 }

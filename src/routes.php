@@ -4,14 +4,6 @@ $gallery = function(string $url="") {
 	$creations = Creation::getAll();
 	header("Content-type:application/json");
 	echo Creation::jsonify($creations);
-	/*
-	foreach($creations as $c) {
-		$data .= render('gallery',
-			['item_id' => $c->getid(),
-			'name' => $c->getname(),
-			'image' => $c->getimage()]);
-	}
-	 */
 };
 
 $userPage = function($data=null) {
@@ -22,10 +14,12 @@ $userPage = function($data=null) {
 };
 
 $logPage = function(string $url="") {
-	if ($_SESSION['is_connected'] == true)
-		echo "ok";
+	header("Content-type:application/json");
+	if (isset($_SESSION['is_connected']) && $_SESSION['is_connected'] == true)
+		echo json_encode(['status' => '1',
+			'user' => $_SESSION['user']->getusername()]);
 	else
-		echo "no";
+		echo json_encode(['status' => 0]);
 };
 
 $accountPage = function(string $url="") {
@@ -40,16 +34,24 @@ $accountPage = function(string $url="") {
 
 $logUser = function(string $url="") {
 	$user = User::connect($_POST['mail'], $_POST['pass']);
-	if ($user === FALSE) {
-		echo "bad credentials";
+	if ($user === null) {
+		echo json_encode(['status' => '0']);
 		die ;
 	}
 	$_SESSION['is_connected'] = true;
 	$_SESSION['user'] = $user;
-	echo "ok";
+	header("Content-type:application/json");
+	echo json_encode(['status' => '1',
+	   	'user' => $_SESSION['user']->getusername()]);
 };
 
 $newUser = function(string $url="") {
-	//$new_user = new User();
+	$user = User::create($_POST['mail'], $_POST['pass'], $_POST['username']);
+	if ($user === null) {
+		echo json_encode(['status' => 0]);
+		die;
+	}
+	User::save($user);
+	echo json_encode(['status' => 1]);
 };
 

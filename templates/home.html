@@ -16,6 +16,7 @@
 						<li><a id="a_gallery" href="#gallery">Gallery</a></li>
 						<li><a id="a_create" href="#create">Create</a></li>
 						<li><a id="a_account" href="#account">Account</a></li>
+						<li><a id="a_logout" href="#logout">Logout</a></li>
 					</ul>
 				</div>
 			</nav>
@@ -23,10 +24,24 @@
 
 		<div id="page_content" class="container">
 
-			<section id="s_gallery" style="display: none">
+			<section id="s_gallery" style="display: none" class="row">
+				<div id="d_img_0" class="col s3">
+					<div class="card blue-grey darken-1">
+						<div class="card-content white-text">
+							<span class="card-title">[@img]</span>
+						</div>
+						<div class="card-action">
+							<a href="#">like</a>
+							<a href="#">comment</a>
+						</div>
+					</div>
+				</div>
 			</section>
 
 			<section id="s_create" style="display: none">
+				<form id="form_creation">
+					<input type="file" class="btn-floating btn-large waves-effect waves-light red material-icon"/>
+				</form>
 			</section>
 
 			<section id="s_account" class="row" style="display: none">
@@ -57,18 +72,20 @@
 				</div> <!-- d_logform -->
 
 				<div id="d_account" style="hidden">
-					<p>hey [@user]</p>
-				</div> <!-- d_logform -->
+					<p>hey <span id="span_username">unknow</span></p>
+				</div> <!-- d_account -->
 
 			</section>
 
 		</div><!-- page_content -->
 
+		<!--
 		<footer class="page-footer">
 			<div class="container">
 				<a class="grey-text text-lighten-4 right" href="#!">thank to Materialize.css</a>
 			</div>
 		</footer>
+		-->
 	</body>
 	<script src="js/form_to_xhr.js"></script>
 	<script src="js/main.js"></script>

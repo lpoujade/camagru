@@ -4,11 +4,13 @@ class Creation {
 	private $id;
 	private $name;
 	private $image;
+	private $user_id;
 
-	public function __construct($id, $name, $image) {
+	public function __construct($id, $name, $image, $user_id) {
 		$this->id = $id;
 		$this->name = $name;
 		$this->image = $image;
+		$this->user_id = $user_id;
 	}
 
 	public function toArray() {
@@ -42,11 +44,14 @@ class Creation {
 	}
 
 	public function getAll($items=5, $index=0) {
-		$fake[] = new Creation(12, 'godmod', 'path/to/img');
-		$fake[] = new Creation(23, 'personne', 'path/to/img');
-		$fake[] = new Creation(13, 'go go go', 'path/to/img');
-		$fake[] = new Creation(75, 'godmod', 'path/to/img');
-		return $fake;
+		global $db;
+
+		$pdo_statement = $db->query("select * from creations limit $items offset $index");
+		$res = $pdo_statement->fetchAll();
+		$r = [];
+		foreach($res as $c)
+			$r[] = new Creation($c['id'], $c['creation_date'], $c['img_path'], $c['user_id']);
+		return ($r);
 	}
 
 	public function jsonify(array $creations) {
