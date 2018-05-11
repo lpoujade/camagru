@@ -19,9 +19,10 @@ $interface = function() {
 $website['router'] = new Router();
 $website['router']->get([
 	"" => $interface,
-	"gallery" => $gallery,
+	"gallery(\/mines)?" => $gallery,
 	"user" => $userPage,
-	"log" => $logPage,
+	"log(\/infos)?" => $logPage,
+	"creation\/delete\/\d+" => $deleteCreation,
 	"flush_session" => function() {
 		foreach ($_SESSION as $i => $v)
 			$_SESSION[$i] = null;

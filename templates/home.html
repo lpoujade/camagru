@@ -23,16 +23,13 @@
 		</header>
 
 		<div id="page_content" class="container">
-			<div class="progress">
-				<progress id="progress" class="determinate" style="width: 100%"></progress>
-			</div>
 
 			<!-- gallery -->
 			<section id="s_gallery" style="display: none" class="row">
-				<div id="d_img_0" class="col s3">
+				<div id="d_img_0" class="col s3" style="display: none">
 					<div class="card blue-grey darken-1">
 						<div class="card-content white-text">
-							<span class="card-title">[@img]</span>
+							<span class="card-title"></span>
 						</div>
 						<div class="card-action">
 							<a href="#">like</a>
@@ -44,10 +41,29 @@
 
 			<!-- create -->
 			<section id="s_create" style="display: none">
-				<form id="form_creation" class="row">
-					<input id="creation_mask" type="file" class="col s3" />
-					<a class="waves-effect waves-light btn-large col s12">button</a>
-				</form>
+				<div class="row">
+					<div class="col s8">
+
+						<form id="form_creation" class="row">
+							<input id="creation_mask" type="file" class="col s3" />
+							<a class="waves-effect waves-light btn-large col s12">button</a>
+						</form>
+
+					</div>
+					<div class="col s4" id="d_userimg">
+						<p>Your images</p>
+						<div id="d_userimg_0" class="col s12" style="display: none">
+							<div class="card blue-grey darken-1">
+								<div class="card-content white-text">
+									<span class="card-title"></span>
+								</div>
+								<div class="card-action">
+									<button class="btn btn-small red">remove</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
 			</section>
 
 			<!-- account -->
@@ -77,18 +93,30 @@
 					</form>
 				</div> <!-- d_logform -->
 				<div id="d_account" style="hidden">
-					<p>hey <span id="span_username">unknow</span></p>
+					<h1>hey <span id="span_username">unknow</span></h1>
+					<div id="d_usermodform">
+						<form id="form_moduser" class="col s8" action="#">
+
+							<input type="text" class="form-control" id="inp_username" aria-describedby="emailHelp" placeholder="Enter email">
+							<input type="email" id="inp_mail" aria-describedby="emailHelp" placeholder="Enter email">
+
+							<label for="pass">Password</label>
+							<input type="password" class="form-control" id="pass" placeholder="Password">
+
+							<button id="btn_log" class="btn">Submit</button>
+						</form>
+					</div> <!-- d_usermod_form -->
 				</div> <!-- d_account -->
 			</section>
 
 		</div><!-- page_content -->
 
 		<!--
-		<footer class="page-footer">
-			<div class="container">
-				<a class="grey-text text-lighten-4 right" href="#!">thank to Materialize.css</a>
-			</div>
-		</footer>
+	  <footer class="page-footer">
+	  <div class="container">
+	  <a class="grey-text text-lighten-4 right" href="#!">thank to Materialize.css</a>
+	  </div>
+	  </footer>
 		-->
 	</body>
 	<script src="js/form_to_xhr.js"></script>

@@ -1,6 +1,10 @@
 <?php
 
 $gallery = function(string $url="") {
+	if (strstr($url, "mines")) {
+		$c = $_SESSION['user']->getCreations();
+		return Creation::jsonify($c);
+	}
 	$creations = Creation::getAll();
 	header("Content-type:application/json");
 	return Creation::jsonify($creations);
@@ -15,14 +19,19 @@ $userPage = function($data=null) {
 };
 
 $logPage = function(string $url="") {
-	header("Content-type:application/json");
+	$infos = strstr($url, "infos");
+	$user = $_SESSION['user'];
 	if (isset($_SESSION['is_connected']) && $_SESSION['is_connected'] == true)
-		$r = json_encode(['status' => '1',
-			'user' => $_SESSION['user']->getusername()]);
+		$r = ['status' => '1',
+			'user' => $user->getusername()];
 	else
-		$r = json_encode(['status' => 0]);
+		$r = ['status' => 0];
 
-	return $r;
+	header("Content-type:application/json");
+	if ($infos && $r['status'] == '1') {
+		$r['mail'] = $user->getmail();
+	}
+	return json_encode($r);
 };
 
 /* POST */
@@ -49,11 +58,32 @@ $newUser = function(string $url="") {
 };
 
 $createItem = function(string $url="") {
-	header("Content-type:application/json");
 	$c = Creation::create($_FILES['file']['name']);
 	if ($c === null || $c === false) {
-		echo "fail to create creation";
+		echo "failed to create creation";
 		die ;
 	}
+	header("Content-type:application/json");
 	return Creation::jsonify([$c]);
+};
+
+$deleteCreation = function(string $url) {
+	$id = explode("/", $url);
+	$id = $id[count($id) - 1];
+	if ($id <= 0) {
+		return json_encode(['bad creation id' => $id]);
+	}
+	$c = new Creation($id);
+	if (!$_SESSION['is_connected'])
+		return json_encode(['not connected']);
+	else if ($_SESSION['user']->getid() != $c->getuserid()) {
+		return json_encode('bad user');
+	}
+	Creation::remove($c);
+	return json_encode('ok');
+};
+
+$modUser = function(string $url) {
+	$user = User::getCurrentUser();
+	return json_encode();
 };

@@ -7,8 +7,6 @@ class User {
 	private $salt;
 	private $confirmed;
 
-	public $msg = "";
-
 	public function __construct(int $id = -1) {
 		global $db;
 		$this->id = $id;
@@ -76,6 +74,24 @@ class User {
 		return $this->confirmed;
 	}
 
+	public function getCreations() {
+		global $db;
+
+		$res = $db->query("select * from creations where user_id={$_SESSION['user']->getid()}")->fetchAll();
+		$c = [];
+		foreach ($res as $r) {
+			$c[] = new Creation($r['id'], $r['img_path'], $r['user_id'], $r['creation_date']);
+		}
+		return $c;
+	}
+
+	public function getCurrentUser() {
+		if (isset($_SESSION['is_connected'])
+			&& $_SESSION['is_connected'] === 1
+			&& $_SESSION['user'] != null)
+			return $_SESSION['user'];
+	}
+
 	public function connect($mail, $pass) {
 		global $db;
 		$r = $db->query("select id,hash,salt from users where mail='$mail'");
@@ -114,9 +130,20 @@ class User {
 		return $user;
 	}
 
-	public function save(User $user) {
+	public function save(User $c) {
 		global $db;
-		return $db->exec("insert into users values
-		   	(NULL, {$user->getconfirmed()}, '{$user->getusername()}', '{$user->getmail()}', '{$user->gethash()}', '{$user->getsalt()}');");
+		if ($c->id && $c->id != -1) {
+			$r = $db->exec("update creations set
+				id = {$c->getid()},
+				username = {$c->getusername()},
+				mail = '{$c->getmail()}', ''
+			where id= {$c->getid()};");
+		} else {
+			$r = $db->exec("insert into users values
+				(NULL, {$c->getconfirmed()}, '{$c->getusername()}', '{$c->getmail()}', '{$c->gethash()}', '{$c->getsalt()}');");
+			$c->setid($db->lastInsertId());
+		}
+		return $r;
 	}
+
 }

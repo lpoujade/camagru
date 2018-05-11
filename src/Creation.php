@@ -6,14 +6,24 @@ class Creation {
 	private $user_id;
 
 	public function __construct($id=-1, $image="", $user_id=-1, $creation_date="") {
+		global $db;
 		$this->id = $id;
-		$this->image = $image;
-		$this->user_id = $user_id;
-		$this->creation_date = $creation_date;
+		if ($id != -1 && $user_id == -1) {
+			$r = $db->query("select * from creations where id=$id")->fetchAll();
+			$r = $r[0];
+			$this->image = $r['img_path'];
+			$this->user_id = $r['user_id'];
+			$this->creation_date = $r['creation_date'];
+		} else {
+			$this->image = $image;
+			$this->user_id = $user_id;
+			$this->creation_date = $creation_date;
+		}
 	}
 
 	public function toArray() {
 		return ['id' => $this->id,
+			'user_id' => $this->user_id,
 			'name' => $this->image,
 			'image' => $this->image];
 	}
@@ -27,11 +37,11 @@ class Creation {
 	}
 
 	public function getuserid() {
-		return $this->userid;
+		return $this->user_id;
 	}
 
 	public function setuserid($value) {
-		$this->userid = $value;
+		$this->user_id = $value;
 	}
 
 	public function getimage() {
@@ -65,7 +75,7 @@ class Creation {
 	}
 
 	public function create($image) {
-		$c = new Creation();
+		$c = new Creation(-1);
 		$c->setimage($image);
 		$c->setuserid($_SESSION['user']->getid());
 		Creation::save($c);
@@ -74,9 +84,22 @@ class Creation {
 
 	public function save(Creation $c) {
 		global $db;
-		$r = $db->exec("insert into creations values
-		   	(NULL, '{$c->getuserid()}', '{$c->getimage()}', '');");
-		$c->setid($db->lastInsertId());
+		if ($c->id > -1) {
+			$r = $db->exec("update creations set
+				id = {$c->getid()},
+				img_path = '{$c->getimage()}', ''
+			where id= {$c->getid()};");
+		} else {
+			$r = $db->exec("insert into creations values
+				(NULL, '{$c->getuserid()}', '{$c->getimage()}', '');");
+			$c->setid($db->lastInsertId());
+		}
+		return $r;
+	}
+
+	public function remove(Creation $c) {
+		global $db;
+		$r = $db->exec("delete from creations where id={$c->getid()}");
 		return $r;
 	}
 }
