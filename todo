@@ -1,19 +1,19 @@
 
 ## TODO
-* gestion utilisateur
-	* mail, username, mot de passe(hash)
+~ gestion utilisateur
 	* confirmation inscription via mail
-	* mail de reinitialisation de mot de passe
-	* deconnexion accessible partout
 	* modification username, pass, mail
+	* mail de reinitialisation de mot de passe
+	. mail, username, mot de passe(hash)
+	. deconnexion accessible partout
 
-* galerie
-	* publique
+~ galerie
+	~ publique
 	* items triés par date
+	* liste par page de 5
 	* pour users:
 		* commentaire
 		* mail quand création commentée, desactivable
-		* liste par page de 5
 
 * creation d'image
 	* deux sections
@@ -26,9 +26,9 @@
 	* suppressions des ses images possible
 
 * general
-	* point d'entré index.php
-	* config/setup.php -> initialisation automatique du site
-	* config/database.php conf db format pdo
+	. point d'entré index.php
+	. config/setup.php -> initialisation automatique du site
+	. config/database.php conf db format pdo
 
 ## PAGES
 * /(gallery)

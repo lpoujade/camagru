@@ -22,15 +22,15 @@ $website['router']->get([
 	"gallery" => $gallery,
 	"user" => $userPage,
 	"log" => $logPage,
-	"account" => $accountPage,
 	"flush_session" => function() {
 		foreach ($_SESSION as $i => $v)
 			$_SESSION[$i] = null;
-		return json_encode('ok');
+		return ;
 	}]);
 
 $website['router']->post([
 	"log" => $logUser,
+	"creation" => $createItem,
 	"register" => $newUser]);
 
 $website['router']->respond($_SERVER['REQUEST_URI']);

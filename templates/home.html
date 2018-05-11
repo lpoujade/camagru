@@ -23,7 +23,11 @@
 		</header>
 
 		<div id="page_content" class="container">
+			<div class="progress">
+				<progress id="progress" class="determinate" style="width: 100%"></progress>
+			</div>
 
+			<!-- gallery -->
 			<section id="s_gallery" style="display: none" class="row">
 				<div id="d_img_0" class="col s3">
 					<div class="card blue-grey darken-1">
@@ -38,14 +42,16 @@
 				</div>
 			</section>
 
+			<!-- create -->
 			<section id="s_create" style="display: none">
-				<form id="form_creation">
-					<input type="file" class="btn-floating btn-large waves-effect waves-light red material-icon"/>
+				<form id="form_creation" class="row">
+					<input id="creation_mask" type="file" class="col s3" />
+					<a class="waves-effect waves-light btn-large col s12">button</a>
 				</form>
 			</section>
 
+			<!-- account -->
 			<section id="s_account" class="row" style="display: none">
-
 				<div id="d_logform">
 					<form id="form_log" class="col s6" action="#">
 						<h3>Connect</h3>
@@ -70,11 +76,9 @@
 						<button type="submit" class="btn">Submit</button>
 					</form>
 				</div> <!-- d_logform -->
-
 				<div id="d_account" style="hidden">
 					<p>hey <span id="span_username">unknow</span></p>
 				</div> <!-- d_account -->
-
 			</section>
 
 		</div><!-- page_content -->
@@ -88,5 +92,6 @@
 		-->
 	</body>
 	<script src="js/form_to_xhr.js"></script>
+	<script src="js/creation.js"></script>
 	<script src="js/main.js"></script>
 </html>

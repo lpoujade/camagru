@@ -27,14 +27,6 @@ class Template {
 class Router {
 	private $urls = ['get' => [], 'post' => []];
 
-	/*
-	public function __construct(array $urls) {
-		foreach ($urls as $url => $func) {
-			$this->urls[$url] = $func;
-		}
-	}
-	 */
-
 	public function get(array $routes) {
 		foreach($routes as $url => $func) {
 			$this->urls['get'][$url] = $func;
@@ -59,10 +51,12 @@ class Router {
 		}
 		foreach ($this->urls[$method] as $url => $func) {
 			if (preg_match("/^\/$url$/", $req_uri)) {
-				return $func($req_uri);
+				echo $func($req_uri);
+				return ;
 			}
 		}
 		http_response_code(404);
-		echo render('home', ['content' => '<h1>404</h1>']);
+		echo 'not found';
+		//echo render('home', ['content' => '<h1>404</h1>']);
 	}
 }

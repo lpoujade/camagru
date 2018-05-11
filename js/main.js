@@ -26,6 +26,7 @@ function show_elem(elem) {
 handler = {'gallery': function() {
 	show_elem('s_gallery');
 	api_get("/gallery", function(response) {
+		console.log(response);
 		for (i in response) {
 			var ac_div = document.getElementById('d_img_0');
 			var div = ac_div.cloneNode(true);
@@ -37,14 +38,18 @@ handler = {'gallery': function() {
 },
 	'create': function() {
 		show_elem('s_create');
+		api_get('/log', function(response) {
+			console.log(response);
+			if (response.status == 0)
+				handler['account']();
+		});
 	},
 	'logout': function() {
-		api_get('/flush_session', null);
-		window.handler['account']();
+		api_get('/flush_session', window.handler['account']);
 	},
 	'account': function() {
 		show_elem('s_account');
-		var co = api_get('/log', function(response) {
+		api_get('/log', function(response) {
 			console.log(response);
 			if (response.status == 1) {
 				d_account.style.display = "";

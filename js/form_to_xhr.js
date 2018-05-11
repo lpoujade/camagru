@@ -7,11 +7,18 @@ function notif(text) {
 function post_form(url, datas, callback) {
 	var xhr = new XMLHttpRequest();
 	xhr.open('POST', url);
-	xhr.addEventListener('load', callback);
+	xhr.addEventListener('progress', function(e) {
+		progress.max = e.total;
+		progress.value = e.loaded;
+	});
+	xhr.addEventListener('load', function() {
+		callback(JSON.parse(xhr.response));
+	});
 	var form = new FormData();
 	for (i in datas) {
 		form.append(i, datas[i]);
 	}
+	console.log('post form to ' + url);
 	xhr.send(form);
 }
 
