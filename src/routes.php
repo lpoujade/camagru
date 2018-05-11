@@ -1,15 +1,28 @@
 <?php
 
+/**** GET ****/
+
+/*
+ * /gallery(/mines|/username|/int:offset)
+ * return @array of Creation items
+ */
 $gallery = function(string $url="") {
 	if (strstr($url, "mines")) {
-		$c = $_SESSION['user']->getCreations();
-		return Creation::jsonify($c);
-	}
-	$creations = Creation::getAll();
+		$creations = $_SESSION['user']->getCreations();
+	} else if (preg_match('/gallery\/\d+/', $url)) {
+		$t = explode("/", $url);
+		$offset = $t[count($t) -1];
+		$creations = Creation::getAll($offset);
+	} else
+		$creations = Creation::getAll();
 	header("Content-type:application/json");
 	return Creation::jsonify($creations);
 };
 
+/*
+ * /user/username
+ * return public User info
+ */
 $userPage = function($data=null) {
 	$username = trim($data[0], "/");
 	if (!$username)
@@ -18,6 +31,10 @@ $userPage = function($data=null) {
 	return $username;
 };
 
+/*
+ * /log(/infos)
+ * return @array of user infos
+ */
 $logPage = function(string $url="") {
 	$infos = strstr($url, "infos");
 	$user = $_SESSION['user'];
@@ -34,7 +51,7 @@ $logPage = function(string $url="") {
 	return json_encode($r);
 };
 
-/* POST */
+/**** POST ****/
 
 $logUser = function(string $url="") {
 	$user = User::connect($_POST['mail'], $_POST['pass']);
@@ -85,5 +102,13 @@ $deleteCreation = function(string $url) {
 
 $modUser = function(string $url) {
 	$user = User::getCurrentUser();
-	return json_encode();
+	if (!$user) {
+		echo "no user";
+		die ;
+	}
+	$user->setmail($_POST['mail']);
+	$user->setusername($_POST['username']);
+	if (User::save($user) === true)
+		return json_encode('ok');
+   	return json_encode('fail?');
 };

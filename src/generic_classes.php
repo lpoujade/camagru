@@ -26,14 +26,19 @@ class Template {
 
 class Router {
 	private $urls = ['get' => [], 'post' => []];
+	private $pre = ['get' => null, 'post' => null];
 
-	public function get(array $routes) {
+	public function get(array $routes, $prepost = null) {
+		if ($prepost)
+			$this->pre['get'] = $prepost;
 		foreach($routes as $url => $func) {
 			$this->urls['get'][$url] = $func;
 		}
 	}
 
-	public function post(array $routes) {
+	public function post(array $routes, $prepost = null) {
+		if ($prepost)
+			$this->pre['post'] = $prepost;
 		foreach($routes as $url => $func) {
 			$this->urls['post'][$url] = $func;
 		}
@@ -43,14 +48,17 @@ class Router {
 		$method = "";
 		if (!strcmp($_SERVER['REQUEST_METHOD'], "GET"))
 			$method = "get";
-		else if (!strcmp($_SERVER['REQUEST_METHOD'], "POST"))
+		else if (!strcmp($_SERVER['REQUEST_METHOD'], "POST")) {
 			$method = "post";
+		}
 		else {
 			echo "unknow method";
 			exit ;
 		}
 		foreach ($this->urls[$method] as $url => $func) {
 			if (preg_match("/^\/$url$/", $req_uri)) {
+				if ($this->pre[$method])
+					$this->pre[$method]();
 				echo $func($req_uri);
 				return ;
 			}

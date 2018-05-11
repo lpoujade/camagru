@@ -87,14 +87,14 @@ class User {
 
 	public function getCurrentUser() {
 		if (isset($_SESSION['is_connected'])
-			&& $_SESSION['is_connected'] === 1
+			&& $_SESSION['is_connected'] === true
 			&& $_SESSION['user'] != null)
 			return $_SESSION['user'];
 	}
 
-	public function connect($mail, $pass) {
+	public function checkpass($id, $pass) {
 		global $db;
-		$r = $db->query("select id,hash,salt from users where mail='$mail'");
+		$r = $db->query("select hash,salt from users where id='$id'");
 		$res = $r->fetchAll();
 		if (count($r) != 1) {
 			echo "fail?";
@@ -102,8 +102,18 @@ class User {
 		}
 		$hash = $res[0]['hash'];
 		$salt = $res[0]['salt'];
-		$id = $res[0]['id'];
 		if (!strcmp($hash, hash('whirlpool', $pass.$salt)))
+			return true;
+		return false;
+	}
+
+	public function connect($mail, $pass) {
+		global $db;
+		$id = false;
+		$r = $db->query("select id from users where mail='$mail'");
+		$res = $r->fetchAll();
+		$id = $res[0]['id'];
+		if (User::checkpass($id, $pass) === true)
 			return new User($id);
 		return null;
 	}
@@ -133,11 +143,11 @@ class User {
 	public function save(User $c) {
 		global $db;
 		if ($c->id && $c->id != -1) {
-			$r = $db->exec("update creations set
-				id = {$c->getid()},
-				username = {$c->getusername()},
-				mail = '{$c->getmail()}', ''
-			where id= {$c->getid()};");
+			$r = $db->exec("update users set
+				id = $c->id,
+				username = '$c->username',
+				mail = '$c->mail'
+			where id = $c->id;");
 		} else {
 			$r = $db->exec("insert into users values
 				(NULL, {$c->getconfirmed()}, '{$c->getusername()}', '{$c->getmail()}', '{$c->gethash()}', '{$c->getsalt()}');");

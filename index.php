@@ -16,10 +16,17 @@ $interface = function() {
 	echo file_get_contents('templates/home.html');
 };
 
+$clean_post_data = function() {
+	foreach ($_POST as $k => $v) {
+		$_POST[$k] = SQLite3::escapeString($v);
+	}
+};
+
 $website['router'] = new Router();
+
 $website['router']->get([
 	"" => $interface,
-	"gallery(\/mines)?" => $gallery,
+	"gallery(\/mines|\/\d+)?" => $gallery,
 	"user" => $userPage,
 	"log(\/infos)?" => $logPage,
 	"creation\/delete\/\d+" => $deleteCreation,
@@ -31,7 +38,8 @@ $website['router']->get([
 
 $website['router']->post([
 	"log" => $logUser,
+	"mod" => $modUser,
 	"creation" => $createItem,
-	"register" => $newUser]);
+	"register" => $newUser], $clean_post_data);
 
 $website['router']->respond($_SERVER['REQUEST_URI']);

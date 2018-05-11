@@ -55,15 +55,15 @@ class Creation {
 	/*
 	 * return @array of Creations
 	*/
-	public function getAll($items=5, $index=0) {
+	public function getAll($offset=0, $items=5) {
 		global $db;
 
-		$pdo_statement = $db->query("select * from creations limit $items offset $index");
+		$pdo_statement = $db->query("select * from creations limit $items offset $offset");
 		$res = $pdo_statement->fetchAll();
-		$r = [];
+		$creations = [];
 		foreach($res as $c)
-			$r[] = new Creation($c['id'], $c['img_path'], $c['user_id'], $c['creation_date']);
-		return ($r);
+			$creations[] = new Creation($c['id'], $c['img_path'], $c['user_id'], $c['creation_date']);
+		return ($creations);
 	}
 
 	public function jsonify(array $creations) {
