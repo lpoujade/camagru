@@ -8,22 +8,21 @@
 	. deconnexion accessible partout
 
 ~ galerie
-	~ publique
 	* items triés par date
-	* liste par page de 5
+	. liste par page de 5
 	* pour users:
-		* commentaire
+		* commentaires
 		* mail quand création commentée, desactivable
 
 * creation d'image
-	* deux sections
-		1 apercu webcam, liste image ajoutable, bouton photo
-		2 miniature des photos précédentes
-	* images ajoutables clicables
-	* pas de photo tant que pas d'images ajoutées
-	* traitement de l'image en php
-	* webcam ou upload photo
-	* suppressions des ses images possible
+	-js 
+		* webcam ou upload photo
+		* images ajoutables à uploader
+		* pas de photo tant que pas d'images ajoutées
+	-php
+		* dates, comments
+		* traitement de l'image en php
+		. suppressions des ses images possible
 
 * general
 	. point d'entré index.php

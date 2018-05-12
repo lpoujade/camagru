@@ -27,14 +27,21 @@
 			<!-- gallery -->
 			<section id="s_gallery" style="display: none" class="row">
 				<div id="d_gallery">
-					<div id="d_img_0" class="col s3" style="display: none">
+					<div id="d_img_0" class="col s4" style="display: none">
 						<div class="card blue-grey darken-1">
 							<div class="card-content white-text">
 								<span class="card-title"></span>
 							</div>
 							<div class="card-action">
 								<a href="#">like</a>
-								<a href="#">comment</a>
+								<a class="_comment" href="#comment" onclick='comment_show(this)'>comment</a>
+								<ul class="ul_comment" style="display: none">
+									<li>void</li>
+									<li class="row">
+										<input class="inp_comment col s8" type="text" />
+										<button onclick='comment_it(this)' class="btn btn-small col s4">send</button>
+									</li>
+								</ul>
 							</div>
 						</div>
 					</div> <!-- /d_img_0 -->
@@ -132,6 +139,7 @@
 	  </footer>
 		-->
 	</body>
+	<script src="js/comments.js"></script>
 	<script src="js/form_to_xhr.js"></script>
 	<script src="js/creation.js"></script>
 	<script src="js/gallery.js"></script>

@@ -6,6 +6,7 @@ require_once("src/generic_classes.php");
 require_once("src/routes.php");
 require_once("src/Creation.php");
 require_once("src/User.php");
+require_once("src/Comment.php");
 
 if (session_start() === false) {
 	echo "failed to start session ?";
@@ -28,6 +29,7 @@ $website['router']->get([
 	"" => $interface,
 	"gallery(\/mines|\/\d+)?" => $gallery,
 	"user" => $userPage,
+	"comment(s)?\/\d+" => $getComments,
 	"log(\/infos)?" => $logPage,
 	"creation\/delete\/\d+" => $deleteCreation,
 	"flush_session" => function() {
@@ -39,6 +41,7 @@ $website['router']->get([
 $website['router']->post([
 	"log" => $logUser,
 	"mod" => $modUser,
+	"comment" => $writeComment,
 	"creation" => $createItem,
 	"register" => $newUser], $clean_post_data);
 

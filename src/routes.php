@@ -51,6 +51,17 @@ $logPage = function(string $url="") {
 	return json_encode($r);
 };
 
+/*
+ * /comment(s)/id
+ * return @json comment id or json array of comments for creation id
+ */
+$getComments = function(string $url) {
+	$ue = explode("/", $url);
+	$id = $ue[count($ue) - 1];
+	$c = Comment::getFor($id);
+	return json_encode($c);
+};
+
 /**** POST ****/
 
 $logUser = function(string $url="") {
@@ -111,4 +122,17 @@ $modUser = function(string $url) {
 	if (User::save($user) === true)
 		return json_encode('ok');
    	return json_encode('fail?');
+};
+
+$writeComment = function(string $url) {
+	$com = new Comment();
+	$post = $_POST;
+	$user = User::getCurrentUser();
+	$com->setcreation_id($post['creation_id']);
+	$com->settext($post['text']);
+	$com->setuser_id($user->getid());
+	if ($com->save() === false)
+		return json_encode('?');
+	else
+		return json_encode(['status' => 1]);
 };
