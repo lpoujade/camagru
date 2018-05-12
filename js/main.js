@@ -60,6 +60,7 @@ handler = {
 	'logout': function() {
 		api_get('/flush_session', window.handler['account']);
 		connected = false;
+		handler['gallery'];
 	},
 	'account': function() {
 		show_elem('s_account');
@@ -102,3 +103,5 @@ btn_moduser.addEventListener('click', function() {
 		console.log('posted');
 	});
 });
+
+

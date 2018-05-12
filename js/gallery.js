@@ -5,7 +5,7 @@ function gallery_addimgs(imgs) {
 		var div = ac_div.cloneNode(true);
 		div.style.display = "";
 		div.id = 'd_img_' + imgs[i].id;
-		div.getElementsByTagName('span')[0].innerHTML = imgs[i].image;
+		div.getElementsByTagName('span')[0].innerHTML = imgs[i].id;
 		d_gallery.appendChild(div);
 	}
 	if (i < 4) {

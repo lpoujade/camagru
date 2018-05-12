@@ -2,25 +2,41 @@
 
 
 /* comments
-	id, creation_id, user_id, creation_date, text
+	id, creation_id, user_id, creation_date, content
  */
-class Comment {
+class Comment extends Data {
 	private $id;
 	private $creation_id;
 	private $user_id;
+	private $username;
 	private $creation_date;
-	private $text;
+	private $content;
 
 	public function __construct(int $id = -1) {
 		global $db;
 		$this->id = $id;
 		if ($id != -1) {
-			$r = $db->query("select * from comments where id=$id")->fetchAll()[0];
+			$r = $db->query("select
+			   	id,creation_id,user_id,content,creation_date, b.username as username
+				from comments a
+				join users b on b.id = a.user_id
+			   	where id=$id")->fetchAll()[0];
 			$this->creation_id = $r['creation_id'];
 			$this->creation_date = $r['creation_date'];
 			$this->user_id = $r['user_id'];
-			$this->text = $r['text'];
+			$this->content = $r['content'];
+			$this->username = $r['username'];
 		}
+		parent::__construct();
+	}
+
+	public function toArray() {
+		return ['id' => $this->id,
+		'creation_id' => $this->creation_id,
+		'user_id' => $this->user_id,
+		'creation_date' => $this->creation_date,
+		'content' => $this->content,
+		'username' => $this->username];
 	}
 
 	public function getid() {
@@ -39,6 +55,10 @@ class Comment {
 		$this->creation_id = $value;
 	}
 
+	public function setusername($value) {
+		$this->username = $value;
+	}
+
 	public function getuser_id() {
 		return $this->user_id;
 	}
@@ -55,12 +75,12 @@ class Comment {
 		return $this->creation_date;
 	}
 
-	public function getext() {
-		return $this->text;
+	public function gecontent() {
+		return $this->content;
 	}
 
-	public function settext($value) {
-		$this->text = $value;
+	public function setcontent($value) {
+		$this->content = $value;
 	}
 
 	public function save() {
@@ -70,34 +90,30 @@ class Comment {
 				user_id = $this->user_id,
 				creation_id = $this->creation_id,
 				creation_date = '',
-				text = '$this->text'
+				content = '$this->content'
 			where id = $this->id;");
 		} else {
 			$r = $db->exec("insert into comments values
-				(NULL, $this->user_id, $this->creation_id, '', '$this->text');");
+				(NULL, $this->user_id, $this->creation_id, '', '$this->content');");
 			$this->setid($db->lastInsertId());
 		}
 		return $r;
 	}
 
-	public function getFor($id = -1, $creation_id = -1) {
+	public function getFor($creation_id = -1) {
 		global $db;
 
-		if ($id != -1)
-			$condition = "id = ".$id;
-		else if ($creation_id != -1)
-			$condition = "creation_id = ".$creation_id;
-		else {
-			echo "failed to get comment";
-			die ;
-		}
-		$r = $db->query("select * from comments where $condition");
+		$r = $db->query("select
+			c.id,user_id,creation_date,content,u.username as username
+		from comments c
+		join users u on c.user_id = u.id
+		where c.creation_id = $creation_id");
 		$comments = $r->fetchAll();
 		$coms = [];
 		foreach ($comments as $c) {
 			$nc = new Comment();
-			$nc->setcreation_id($c['creation_id']);
-			$nc->settext($c['text']);
+			$nc->setcontent($c['content']);
+			$nc->setusername($c['username']);
 			$nc->setuser_id($c['user_id']);
 			$nc->setid($c['id']);
 			$coms[] = $nc;
@@ -105,5 +121,4 @@ class Comment {
 		return $coms;
 
 	}
-
 }

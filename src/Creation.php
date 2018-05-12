@@ -1,6 +1,6 @@
 <?php
 
-class Creation {
+class Creation extends Data {
 	private $id;
 	private $image;
 	private $user_id;
@@ -64,14 +64,6 @@ class Creation {
 		foreach($res as $c)
 			$creations[] = new Creation($c['id'], $c['img_path'], $c['user_id'], $c['creation_date']);
 		return ($creations);
-	}
-
-	public function jsonify(array $creations) {
-		$r = [];
-		foreach ($creations as $c) {
-			$r[] = $c->toArray();
-		};
-		return json_encode($r);
 	}
 
 	public function create($image) {

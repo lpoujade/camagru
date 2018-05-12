@@ -9,17 +9,19 @@
 	</head>
 	<body>
 		<header>
-			<nav>
-				<div class="nav-wrapper">
-					<a href="/" class="brand-logo">Camagru</a>
-					<ul id="nav-mobile" class="right hide-on-med-and-down">
-						<li><a id="a_gallery" href="#gallery">Gallery</a></li>
-						<li><a id="a_create" href="#create">Create</a></li>
-						<li><a id="a_account" href="#account">Account</a></li>
-						<li><a id="a_logout" href="#logout">Logout</a></li>
-					</ul>
-				</div>
-			</nav>
+			<div class="navbar-fixed">
+				<nav>
+					<div class="nav-wrapper">
+						<a href="#!" class="brand-logo">Camagru</a>
+						<ul class="right">
+							<li><a id="a_gallery" href="#gallery">Gallery</a></li>
+							<li><a id="a_create" href="#create">Create</a></li>
+							<li><a id="a_account" href="#account">Account</a></li>
+							<li><a id="a_logout" href="#logout">Logout</a></li>
+						</ul>
+					</div>
+				</nav>
+			</div>
 		</header>
 
 		<div id="page_content" class="container">
@@ -27,7 +29,7 @@
 			<!-- gallery -->
 			<section id="s_gallery" style="display: none" class="row">
 				<div id="d_gallery">
-					<div id="d_img_0" class="col s4" style="display: none">
+					<div id="d_img_0" class="col s6" style="display: none">
 						<div class="card blue-grey darken-1">
 							<div class="card-content white-text">
 								<span class="card-title"></span>
@@ -35,13 +37,14 @@
 							<div class="card-action">
 								<a href="#">like</a>
 								<a class="_comment" href="#comment" onclick='comment_show(this)'>comment</a>
-								<ul class="ul_comment" style="display: none">
-									<li>void</li>
-									<li class="row">
+								<div class="dul_comment" style="display: none">
+									<ul class="ul_comment collection">
+									</ul>
+									<div class="row">
 										<input class="inp_comment col s8" type="text" />
 										<button onclick='comment_it(this)' class="btn btn-small col s4">send</button>
-									</li>
-								</ul>
+									</div>
+								</div>
 							</div>
 						</div>
 					</div> <!-- /d_img_0 -->
@@ -144,4 +147,8 @@
 	<script src="js/creation.js"></script>
 	<script src="js/gallery.js"></script>
 	<script src="js/main.js"></script>
+	<script>
+		/* load first set of images */
+		handler['gallery']();
+	</script>
 </html>

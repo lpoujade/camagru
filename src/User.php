@@ -1,6 +1,6 @@
 <?php
 
-class User {
+class User extends Data {
 	private $id;
 	private $username;
 	private $hash;
@@ -16,6 +16,7 @@ class User {
 			$this->mail = $r['mail'];
 			$this->confirmed = $r['confirmed'];
 		}
+		parent::__construct();
 	}
 
 	public function __toString() {
@@ -155,5 +156,4 @@ class User {
 		}
 		return $r;
 	}
-
 }

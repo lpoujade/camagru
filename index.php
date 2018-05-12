@@ -4,6 +4,7 @@ require_once("config/database.php");
 require_once("src/utils.php");
 require_once("src/generic_classes.php");
 require_once("src/routes.php");
+require_once("src/data.class.php");
 require_once("src/Creation.php");
 require_once("src/User.php");
 require_once("src/Comment.php");

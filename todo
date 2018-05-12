@@ -2,8 +2,9 @@
 ## TODO
 ~ gestion utilisateur
 	* confirmation inscription via mail
-	* modification username, pass, mail
+	* modification pass
 	* mail de reinitialisation de mot de passe
+	. modification username, mail
 	. mail, username, mot de passe(hash)
 	. deconnexion accessible partout
 
@@ -11,7 +12,7 @@
 	* items triés par date
 	. liste par page de 5
 	* pour users:
-		* commentaires
+		. commentaires
 		* mail quand création commentée, desactivable
 
 * creation d'image
@@ -20,8 +21,9 @@
 		* images ajoutables à uploader
 		* pas de photo tant que pas d'images ajoutées
 	-php
-		* dates, comments
+		* dates
 		* traitement de l'image en php
+		. comments
 		. suppressions des ses images possible
 
 * general

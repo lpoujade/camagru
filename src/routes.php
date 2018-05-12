@@ -37,8 +37,8 @@ $userPage = function($data=null) {
  */
 $logPage = function(string $url="") {
 	$infos = strstr($url, "infos");
-	$user = $_SESSION['user'];
-	if (isset($_SESSION['is_connected']) && $_SESSION['is_connected'] == true)
+	$user = User::getCurrentUser();
+	if ($user)
 		$r = ['status' => '1',
 			'user' => $user->getusername()];
 	else
@@ -59,7 +59,7 @@ $getComments = function(string $url) {
 	$ue = explode("/", $url);
 	$id = $ue[count($ue) - 1];
 	$c = Comment::getFor($id);
-	return json_encode($c);
+	return Comment::jsonify($c);
 };
 
 /**** POST ****/
@@ -86,7 +86,7 @@ $newUser = function(string $url="") {
 };
 
 $createItem = function(string $url="") {
-	$c = Creation::create($_FILES['file']['name']);
+	$c = Creation::create(SQLite3::escapeString($_FILES['file']['name']));
 	if ($c === null || $c === false) {
 		echo "failed to create creation";
 		die ;
@@ -128,8 +128,11 @@ $writeComment = function(string $url) {
 	$com = new Comment();
 	$post = $_POST;
 	$user = User::getCurrentUser();
+	if (!$user) {
+		return json_encode(['status' => 'not connected']);
+	}
 	$com->setcreation_id($post['creation_id']);
-	$com->settext($post['text']);
+	$com->setcontent($post['content']);
 	$com->setuser_id($user->getid());
 	if ($com->save() === false)
 		return json_encode('?');
