@@ -9,7 +9,7 @@ function comment_show(e) {
 	prev_dul = e.nextElementSibling;
 
 	ul = prev_dul.getElementsByClassName('ul_comment')[0];
-	if (ul.childElementCount >= 2)
+	if (ul.childElementCount >= 1)
 		return ;
 	api_get('/comments/'+id, function(r) {
 		for (i in r) {
@@ -29,4 +29,12 @@ function comment_it(e) {
 			'content': e.previousElementSibling.value
 		}, null);
 
+}
+
+function like_it(e) {
+	var id = e.parentNode.parentNode.parentNode.id.split('_').pop();
+	post_form('/like',
+		{
+			'creation_id': id
+		}, null);
 }

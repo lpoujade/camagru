@@ -3,7 +3,7 @@ function api_get(url, callback) {
 	xhr.open('GET', url);
 	xhr.addEventListener('load', function() {
 	console.log('received from ' + url);
-		if (callback)
+		if (callback != null && xhr.response)
 			callback(JSON.parse(xhr.response));
 	});
 	console.log('api_get ' + url);
@@ -12,21 +12,25 @@ function api_get(url, callback) {
 
 function show_elem(elem) {
 	/* hide other sections */
+	var e = document.getElementById(elem);
+	if (e.style.display != "none")
+		return true;
 	var sections = document.getElementsByTagName('section');
 	var i = 0;
 	while (i < sections.length) {
 		sections[i].style.display = "none";
 		i++;
 	}
-	var e = document.getElementById(elem);
 	if (e)
 		e.style.display = "";
+	return false;
 }
 
 handler = {
 	'gallery': function() {
-		show_elem('s_gallery');
-		if (d_gallery.childElementCount > 2)
+		if (show_elem('s_gallery'))
+			return ;
+		if (d_gallery.childElementCount >= 2)
 			return ;
 		api_get("/gallery", gallery_addimgs);
 	},
@@ -58,9 +62,9 @@ handler = {
 		}
 	},
 	'logout': function() {
-		api_get('/flush_session', window.handler['account']);
+		handler['gallery']();
+		api_get('/flush_session', null);
 		connected = false;
-		handler['gallery'];
 	},
 	'account': function() {
 		show_elem('s_account');

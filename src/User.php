@@ -2,6 +2,7 @@
 
 class User extends Data {
 	private $id;
+	private $notif_mail;
 	private $username;
 	private $hash;
 	private $salt;
@@ -16,7 +17,6 @@ class User extends Data {
 			$this->mail = $r['mail'];
 			$this->confirmed = $r['confirmed'];
 		}
-		parent::__construct();
 	}
 
 	public function __toString() {
@@ -29,6 +29,14 @@ class User extends Data {
 
 	public function setid($value) {
 		$this->id = $value;
+	}
+
+	public function getnotif_mail() {
+		return $this->notif_mail;
+	}
+
+	public function setnotif_mail($value) {
+		$this->notif_mail = $value;
 	}
 
 	public function getusername() {
@@ -151,7 +159,7 @@ class User extends Data {
 			where id = $c->id;");
 		} else {
 			$r = $db->exec("insert into users values
-				(NULL, {$c->getconfirmed()}, '{$c->getusername()}', '{$c->getmail()}', '{$c->gethash()}', '{$c->getsalt()}');");
+				(NULL, '{$c->getnotif_mail()}', '{$c->getconfirmed()}', '{$c->getusername()}', '{$c->getmail()}', '{$c->gethash()}', '{$c->getsalt()}');");
 			$c->setid($db->lastInsertId());
 		}
 		return $r;

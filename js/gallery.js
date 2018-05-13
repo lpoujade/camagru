@@ -6,6 +6,9 @@ function gallery_addimgs(imgs) {
 		div.style.display = "";
 		div.id = 'd_img_' + imgs[i].id;
 		div.getElementsByTagName('span')[0].innerHTML = imgs[i].id;
+		var a = div.getElementsByClassName('a_likes')[0];
+		if (imgs[i].likes_count)
+			a.innerHTML += ' ('+imgs[i].likes_count+')';
 		d_gallery.appendChild(div);
 	}
 	if (i < 4) {

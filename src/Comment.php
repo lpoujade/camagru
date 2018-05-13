@@ -27,7 +27,6 @@ class Comment extends Data {
 			$this->content = $r['content'];
 			$this->username = $r['username'];
 		}
-		parent::__construct();
 	}
 
 	public function toArray() {
@@ -97,6 +96,12 @@ class Comment extends Data {
 				(NULL, $this->user_id, $this->creation_id, '', '$this->content');");
 			$this->setid($db->lastInsertId());
 		}
+		return $r;
+	}
+
+	public function remove(Comment $c) {
+		global $db;
+		$r = $db->exec("delete from comments where id={$c->getid()}");
 		return $r;
 	}
 

@@ -19,8 +19,7 @@ if ($db->exec("create table creations(
 	id integer primary key,
 	user_id integer,
 	img_path text,
-	creation_date text,
-	modification_date text);") === FALSE) {
+	creation_date text);") === FALSE) {
 
 	echo "failed to create creations table : ".print_r($db->errorInfo(), true);
 	die ;
@@ -34,6 +33,11 @@ if ($db->exec("create table comments(
 	content text);") === FALSE) {
 
 	echo "failed to create comments table : ".print_r($db->errorInfo(), true);
+	die ;
+}
+
+if ($db->exec("create table likes(user_id int, creation_id int);") === FALSE) {
+	echo "failed to create token table : ".print_r($db->errorInfo(), true);
 	die ;
 }
 

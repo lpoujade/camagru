@@ -62,6 +62,7 @@ $getComments = function(string $url) {
 	return Comment::jsonify($c);
 };
 
+
 /**** POST ****/
 
 $logUser = function(string $url="") {
@@ -99,16 +100,17 @@ $deleteCreation = function(string $url) {
 	$id = explode("/", $url);
 	$id = $id[count($id) - 1];
 	if ($id <= 0) {
-		return json_encode(['bad creation id' => $id]);
+		return json_encode(['status' => false, 'bad creation id' => $id]);
 	}
 	$c = new Creation($id);
-	if (!$_SESSION['is_connected'])
-		return json_encode(['not connected']);
-	else if ($_SESSION['user']->getid() != $c->getuserid()) {
-		return json_encode('bad user');
+	$user = User::getCurrentUser();
+	if (!$user)
+		return json_encode(['status' => false, 'reason' => 'not connected']);
+	else if ($user->getid() != $c->getuserid()) {
+		return json_encode(['status' => false, 'reason' => 'bad user']);
 	}
 	Creation::remove($c);
-	return json_encode('ok');
+	return json_encode(['status' => true]);
 };
 
 $modUser = function(string $url) {
@@ -138,4 +140,14 @@ $writeComment = function(string $url) {
 		return json_encode('?');
 	else
 		return json_encode(['status' => 1]);
+};
+
+$likeItem = function() {
+	$c = new Creation($_POST['creation_id']);
+	$user = User::getCurrentUser();
+	if (!$user)
+		return json_encode(['status' => false, 'reason' => 'not connected']);
+	$c->addLike($user->getid());
+	//Creation::save($c); // || $c->save();
+	return json_encode(['status' => true]);
 };

@@ -43,6 +43,7 @@ $website['router']->post([
 	"log" => $logUser,
 	"mod" => $modUser,
 	"comment" => $writeComment,
+	"like" => $likeItem,
 	"creation" => $createItem,
 	"register" => $newUser], $clean_post_data);
 
