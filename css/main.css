@@ -5,8 +5,18 @@ body {
 	flex-direction: column;
 }
 
+#page_content {
+	margin-top: 10px;
+}
+
 main {
 	flex: 1 0 auto;
+}
+
+#preview {
+	min-height: 80%;
+	min-width: 50%;
+	border: 2px solid grey;
 }
 
 #d_notif {

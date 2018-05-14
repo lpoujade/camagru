@@ -80,19 +80,21 @@ $logUser = function(string $url="") {
 $newUser = function(string $url="") {
 	$user = User::create($_POST['mail'], $_POST['pass'], $_POST['username']);
 	if ($user === null) {
-		return json_encode(['status' => 0, 'msg' => 'mail already in use']);
+		return json_encode(['status' => false, 'reason' => 'mail already in use']);
 	}
 	User::save($user);
-	return json_encode(['status' => 1, 'user' => $user->getusername()]);
+	return json_encode(['status' => true]);
 };
 
 $createItem = function(string $url="") {
+	header("Content-type:application/json");
+	return json_encode($_POST);
+	die ;
 	$c = Creation::create(SQLite3::escapeString($_FILES['file']['name']));
 	if ($c === null || $c === false) {
 		echo "failed to create creation";
 		die ;
 	}
-	header("Content-type:application/json");
 	return Creation::jsonify([$c]);
 };
 

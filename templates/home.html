@@ -64,12 +64,14 @@
 				<div class="row">
 					<div class="col s8">
 
-						<div id="preview" class="row"></div>
+						<div id="preview" class="row valign-wrapper">
+							<video id="cam"></video>
+						</div>
 						<div id="filters" class="row"></div>
 
 						<form id="form_creation" class="row">
 							<input id="creation_mask" type="file" class="col s3" />
-							<a class="waves-effect waves-light btn-large col s12">capture</a>
+							<a disabled id="btn_capture" class="waves-effect waves-light btn-large col s12">capture</a>
 						</form>
 
 					</div>
@@ -159,6 +161,7 @@
 	<script src="js/creation.js"></script>
 	<script src="js/gallery.js"></script>
 	<script src="js/form_to_xhr.js"></script>
+	<script src="js/cam.js"></script>
 	<script src="js/main.js"></script>
 	<script>
 		/* load first set of images */
