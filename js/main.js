@@ -98,11 +98,3 @@ api_get('/log', function(response) {
 		connected = false;
 });
 
-
-btn_moduser.addEventListener('click', function() {
-	post_form('/mod', {'username': mod_username.value, 'mail': mod_mail.value, 'pass': mod_pass.value}, function() {
-		console.log('posted');
-	});
-});
-
-

@@ -53,3 +53,9 @@ form_register.addEventListener('submit', function() {
 						"mail": form_register.mail.value,
 						"pass": form_register.pass.value}, window.handler['account']);
 });
+
+btn_moduser.addEventListener('click', function() {
+	post_form('/mod', {'username': mod_username.value, 'mail': mod_mail.value, 'pass': mod_pass.value}, function() {
+		console.log('posted');
+	});
+});
