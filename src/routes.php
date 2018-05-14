@@ -114,16 +114,17 @@ $deleteCreation = function(string $url) {
 };
 
 $modUser = function(string $url) {
+	$post = $_POST;
 	$user = User::getCurrentUser();
-	if (!$user) {
-		echo "no user";
-		die ;
-	}
-	$user->setmail($_POST['mail']);
-	$user->setusername($_POST['username']);
+	if (!$user)
+		return json_encode(['status' => false, 'reason' => 'not connected']);
+	if (!User::checkpass($user->getid(), $post['pass']))
+		return json_encode(['status' => false, 'reason' => 'bad password']);
+	$user->setmail($post['mail']);
+	$user->setusername($post['username']);
 	if (User::save($user) === true)
-		return json_encode('ok');
-   	return json_encode('fail?');
+		return json_encode(['status' => true]);
+   	return json_encode(['status' => false, 'reason' => 'unknow']);
 };
 
 $writeComment = function(string $url) {

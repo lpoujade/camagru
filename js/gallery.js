@@ -1,18 +1,34 @@
 
+cards = [];
+void_card = null;
+void_card = document.getElementById('d_img_0');
+void_card.remove();
+void_card.id = 'd_img_';
+void_card.style.display = "";
+void_card.addLike = function(likes_count) {
+	var a = this.getElementsByClassName('a_likes')[0];
+	a.innerHTML += ' ('+likes_count+')';
+};
+void_card.datas = {'likes_count': 0, 'likes': {}};
+
 function gallery_addimgs(imgs) {
+	if (changes) {
+		for ( d in cards ) {
+			cards[d].remove();
+		}
+		changes = false;
+		d_gallery.offset = 5;
+	}
 	for (i in imgs) {
-		var ac_div = document.getElementById('d_img_0');
-		var div = ac_div.cloneNode(true);
-		div.style.display = "";
-		div.id = 'd_img_' + imgs[i].id;
+		var div = void_card.cloneNode(true);
+		Object.assign(div, void_card);
+		div.id += imgs[i].id;
 		div.getElementsByTagName('span')[0].innerHTML = imgs[i].id;
-		var a = div.getElementsByClassName('a_likes')[0];
-		if (imgs[i].likes_count)
-			a.innerHTML += ' ('+imgs[i].likes_count+')';
+		div.addLike(imgs[i].likes_count);
 		d_gallery.appendChild(div);
+		cards.push(div);
 	}
 	if (i < 4) {
-		console.log(i);
 		btn_moreimgs.className += " red";
 		btn_moreimgs.innerHTML = "no more images";
 	}

@@ -2,11 +2,9 @@ function api_get(url, callback) {
 	var xhr = new XMLHttpRequest();
 	xhr.open('GET', url);
 	xhr.addEventListener('load', function() {
-	console.log('received from ' + url);
 		if (callback != null && xhr.response)
 			callback(JSON.parse(xhr.response));
 	});
-	console.log('api_get ' + url);
 	xhr.send();
 }
 
@@ -28,9 +26,8 @@ function show_elem(elem) {
 
 handler = {
 	'gallery': function() {
-		if (show_elem('s_gallery'))
-			return ;
-		if (d_gallery.childElementCount >= 2)
+		show_elem('s_gallery');
+		if (!changes && d_gallery.childElementCount >= 2)
 			return ;
 		api_get("/gallery", gallery_addimgs);
 	},
@@ -72,8 +69,8 @@ handler = {
 			if (response.status == 1) {
 				d_account.style.display = "";
 				d_logform.style.display = "none";
-				inp_mail.value = response.mail;
-				inp_username.value = response.user;
+				mod_mail.value = response.mail;
+				mod_username.value = response.user;
 				span_username.innerHTML = response.user + " " + response.mail;
 				connected = true;
 			} else {
@@ -86,7 +83,6 @@ handler = {
 	}
 };
 
-
 var menu_links = [a_gallery, a_create, a_account, a_logout];
 for(i in menu_links)
 	menu_links[i].addEventListener('click', function() {
@@ -94,6 +90,7 @@ for(i in menu_links)
 		handler[name]();
 	});
 
+changes = false;
 api_get('/log', function(response) {
 	if (response.status == 1)
 		connected = true;
@@ -103,7 +100,7 @@ api_get('/log', function(response) {
 
 
 btn_moduser.addEventListener('click', function() {
-	post_form('/mod', {'username': inp_username.value, 'mail': inp_mail.value}, function() {
+	post_form('/mod', {'username': mod_username.value, 'mail': mod_mail.value, 'pass': mod_pass.value}, function() {
 		console.log('posted');
 	});
 });

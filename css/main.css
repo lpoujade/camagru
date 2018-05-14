@@ -9,4 +9,23 @@ main {
 	flex: 1 0 auto;
 }
 
+#d_notif {
+	width: auto;
+	background: rgb(35, 35, 35) none repeat scroll 0% 0%;
+	opacity: 1;
+}
+
+#p_notif {
+	margin: 0px;
+	padding: 0px;
+	color: rgb(255, 255, 255);
+	font-size: 14px;
+	font-weight: 300;
+	line-height: 1em;
+}
+
+#b_notif {
+	color: rgb(246, 100, 150);
+}
+
 /* { border: 1px solid black; } */

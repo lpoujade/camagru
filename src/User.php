@@ -162,6 +162,6 @@ class User extends Data {
 				(NULL, '{$c->getnotif_mail()}', '{$c->getconfirmed()}', '{$c->getusername()}', '{$c->getmail()}', '{$c->gethash()}', '{$c->getsalt()}');");
 			$c->setid($db->lastInsertId());
 		}
-		return $r;
+		return true;
 	}
 }

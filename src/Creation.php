@@ -113,7 +113,8 @@ class Creation extends Data {
 	public function remove(Creation $c) {
 		global $db;
 
-		$r = $db->exec("delete comments from comments a join creations b where a.creation_id = b.".$c->getid());
+		$r = $db->exec("delete from likes where creation_id = ".$c->getid());
+		$r = $db->exec("delete from comments where creation_id = ".$c->getid());
 		$r = $db->exec("delete from creations where id={$c->getid()}");
 		return $r;
 	}

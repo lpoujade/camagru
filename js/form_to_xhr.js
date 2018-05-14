@@ -1,7 +1,21 @@
-function notif(text) {
-	var popup = document.createElement("div");
-	popup.innerHTML = text;
-	header.appendChild(popup);
+function notif(resp) {
+	var popup = document.getElementById("d_notif");
+	popup.style.display = "";
+	if (resp.status) {
+		popup.style.background = "green";
+		popup.firstElementChild.innerHTML = 'Success ' + (resp.reason ?resp.reason: '!');
+	}
+	else {
+		popup.firstElementChild.innerHTML = 'Error: ' + resp.reason;
+		popup.style.background = "red";
+	}
+	popup.style.opacity = 100;
+	setTimeout(function() {
+		popup.style.opacity = 0;
+	}, 2000);
+	setTimeout(function() {
+		popup.style.display = "none";
+	}, 3000);
 }
 
 function post_form(url, datas, callback) {
@@ -16,7 +30,9 @@ function post_form(url, datas, callback) {
 	};
 	*/
 	xhr.addEventListener('load', function() {
-		callback(JSON.parse(xhr.response));
+		if (callback)
+			callback(JSON.parse(xhr.response));
+		notif(JSON.parse(xhr.response));
 	});
 	var form = new FormData();
 	for (i in datas) {
@@ -24,6 +40,7 @@ function post_form(url, datas, callback) {
 	}
 	console.log('post form to ' + url);
 	xhr.send(form);
+	changes = true;
 }
 
 form_log.addEventListener('submit', function() {

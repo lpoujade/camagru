@@ -4,15 +4,16 @@
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
 		<title>Camagru</title>
+		<link rel="stylesheet" href="css/snackbar.css" />
 		<link rel="stylesheet" href="css/materialize/css/materialize.css" />
 		<link rel="stylesheet" href="css/main.css" />
 	</head>
-	<body>
+	<body id="body">
 		<header>
 			<div class="navbar-fixed">
 				<nav>
 					<div class="nav-wrapper">
-						<a href="#!" class="brand-logo">Camagru</a>
+						<a href="" class="brand-logo">Camagru</a>
 						<ul class="right">
 							<li><a id="a_gallery" href="#gallery">Gallery</a></li>
 							<li><a id="a_create" href="#create">Create</a></li>
@@ -23,6 +24,11 @@
 				</nav>
 			</div>
 		</header>
+
+		<div id="d_notif" class="snackbar-container snackbar-pos top-right" style="opacity: 0;display: none">
+			<p id="p_notif">{message}</p>
+			<button class="action" id="b_notif" style="display:none">Dismiss</button>
+		</div>
 
 		<div id="page_content" class="container">
 
@@ -109,18 +115,22 @@
 				<div id="d_account" style="hidden">
 					<h3 class="z-depth-5">hey <span id="span_username">unknow</span></h3>
 					<div id="d_usermodform">
-						<form id="form_moduser" class="col s8" action="#">
+						<form id="form_moduser" class="col s8 row" action="#">
 
-							<input type="text" class="form-control" id="inp_username" aria-describedby="emailHelp" placeholder="Enter email">
-							<input type="email" id="inp_mail" aria-describedby="emailHelp" placeholder="Enter email">
+							<input type="text" class="form-control" id="mod_username" aria-describedby="emailHelp" placeholder="Enter email">
+							<input type="email" id="mod_mail" aria-describedby="emailHelp" placeholder="Enter email">
 
-							<label for="pass">Password</label>
-							<input type="password" class="form-control" id="pass" placeholder="Password">
+							<label for="mod_pass_new">New password ? (else leave blank)</label>
+							<input type="password" class="form-control" id="mod_pass_new" placeholder="Password">
+
+
+							<label for="mod_pass">Password</label>
+							<input type="password" class="form-control" id="mod_pass" placeholder="Password">
 
 							<!-- Switch -->
-							<div class="switch form-control">
+							<div class="switch">
 								<label>
-									<input type="checkbox" class="form-control">
+									<input type="checkbox" id="mail_notif">
 									<span class="lever"></span>
 									Send a mail when receive comment
 								</label>
@@ -143,9 +153,9 @@
 		-->
 	</body>
 	<script src="js/comments.js"></script>
-	<script src="js/form_to_xhr.js"></script>
 	<script src="js/creation.js"></script>
 	<script src="js/gallery.js"></script>
+	<script src="js/form_to_xhr.js"></script>
 	<script src="js/main.js"></script>
 	<script>
 		/* load first set of images */
