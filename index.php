@@ -48,4 +48,4 @@ $website['router']->post([
 	"creation" => $createItem,
 	"register" => "User::create"], $clean_post_data);
 
-$website['router']->respond($_SERVER['REQUEST_URI']);
+$website['router']->respond(str_replace("?", "", $_SERVER['REQUEST_URI']));

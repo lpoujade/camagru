@@ -83,31 +83,33 @@ $newUser = function($url) {
 };
 
 $createItem = function($url) {
+	global $DATAS_DIR;
 	$post = $_POST;
 	$b64_img = substr($post['photo'], strpos($post['photo'], ",") + 1);
 	$img = imagecreatefromstring(base64_decode($b64_img));
-	$calcs = json_encode($post['calcs']);
-	return $calcs;
-	foreach($calcs as $c) {
-		echo "nc: ";
-		print_r($c);
+	if ($img === false) {
+		echo "failed to create initial photo";
+		die;
 	}
-	die ;
+	$calcs = json_decode($post['calcs']);
 	foreach ($calcs as $v) {
-		$im = imagecreatefromstring(base64_decode(substr($v['images'], strpos($v[0], ",") + 1)));
-		imagecopy($img, $im, $v[2], $v[1], 0, 0, 100, 100);
+		$b64_calc = substr($v->image, strpos($v->image, ",") + 1);
+		$raw_calc = base64_decode($b64_calc);
+		$im = imagecreatefromstring($raw_calc);
+		$is = getimagesizefromstring($raw_calc);
+		if ($im === false)
+			return json_encode(['status' => false, 'reason' => 'failed to create initial photo']);
+		$r = imagecopy($img, $im, $v->ofLeft, $v->ofTop, 0, 0, $is[0], $is[1]);
+		if ($r === false)
+			return json_encode(['status' => false, 'reason' => 'failed to copy filter']);
 	}
-
-	file_put_contents("image.png", $img);
-
-	return json_encode(['status' => false, 'reason' => 'wip']);
-	die ;
-	$c = Creation::create(SQLite3::escapeString($_FILES['file']['name']));
+	$user = User::getCurrentUser();
+	$c = Creation::create("finally useless");
 	if ($c === null || $c === false) {
 		return json_encode(['status' => false, 'reason' => 'failed to create item']);
 	}
+	imagepng($img, $DATAS_DIR."/".$c->getid().".png");
 	return json_encode(['status' => true]);
-	//return Creation::jsonify([$c]);
 };
 
 $deleteCreation = function($url) {

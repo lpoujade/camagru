@@ -22,6 +22,7 @@ function gallery_addimgs(imgs) {
 		var div = void_card.cloneNode(true);
 		Object.assign(div, void_card);
 		div.id += imgs[i].id;
+		div.style.backgroundImage = 'url("/datas/'+imgs[i].id+'.png")';
 		div.getElementsByTagName('span')[0].innerHTML = imgs[i].id;
 		div.addLike(imgs[i].likes_count);
 		d_gallery.appendChild(div);

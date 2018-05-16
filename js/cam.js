@@ -25,20 +25,18 @@ function stop_webcam() {
 }
 
 function take_photo() {
-	//var canv = document.getElementById('canvas_photo'); //document.createElement('canvas');
 	var canv = document.createElement('canvas');
-	canv.width = "500";
-	canv.height = "500";
+	canv.width = "1080";
+	canv.height = "960";
 
 	ctx = canv.getContext('2d');
 	ctx.drawImage(cam, 0,0, canv.width, canv.height);
-	page_content.append(canv);
 	var calcs = [];
 	for (i in calc) {
-		calcs.push(JSON.stringify({'image': calc[i].src,
+		calcs.push({'image': calc[i].src,
 		   	'ofTop': calc[i].offsetTop - cam.offsetTop,
-		   	'ofLeft': calc[i].offsetLeft - cam.offsetLeft}));
+		   	'ofLeft': calc[i].offsetLeft - cam.offsetLeft});
 	}
 	console.log(calcs);
-	post_form('/creation', {'photo': canv.toDataURL("image/png"), 'calcs': calcs}, function() {console.log('image posted');});
+	post_form('/creation', {'photo': canv.toDataURL("image/png"), 'calcs': JSON.stringify(calcs)}, function() {console.log('image posted');});
 }

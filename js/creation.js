@@ -65,9 +65,16 @@ function dragElement(elmnt) {
 	}
 }
 
+btn_clearfilters.addEventListener('click', function() {
+	for (c in calc) {
+		calc[c].remove();
+		calc.splice(c, 1);
+	}
+	btn_capture.setAttribute('disabled', true);
+});
+
 creation_mask.addEventListener('change', function() {
 	handleFile(creation_mask.files);
-	//post_form('/creation', {'file': creation_mask.files[0]}, onform_sent);
 });
 
 btn_capture.addEventListener('click', function() {

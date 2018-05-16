@@ -1,5 +1,6 @@
 <?php
 
+mkdir(__DIR__."/../datas");
 include_once("database.php");
 
 if ($db->exec("create table users(

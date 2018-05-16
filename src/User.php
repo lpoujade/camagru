@@ -139,6 +139,7 @@ class User extends Data {
 	}
 
 	static function create() {
+		global $DATAS_DIR;
 		$post = $_POST;
 		$user = new User();
 		if (User::checkmail($post['mail']) === false)
@@ -149,6 +150,8 @@ class User extends Data {
 		$user->setconfirmed(0);
 		$token = bin2hex(openssl_random_pseudo_bytes(50));
 		User::save($user);
+		mkdir($DATAS_DIR.$user->getid());
+		mail($user->getmail(), "Welcome to the camagru", $_SERVER['NAME']."/".$user->getid()."/<insert token here>");
 		return json_encode(['status' => true, 'reason' => 'Check your mails']);
 	}
 
