@@ -66,7 +66,7 @@ class Router {
 			}
 		}
 		http_response_code(404);
-		echo json_encode('not found');
+		echo json_encode(['status' => 'not found', 'url' => $req_uri]);
 		//echo render('home', ['content' => '<h1>404</h1>']);
 	}
 }

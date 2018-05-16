@@ -57,7 +57,17 @@ $mailMe = function($url) {
 };
 
 $verifyToken = function($url) {
-	return;
+	$url = explode("/", $url);
+	$token = $url[count($url) - 1];
+	$user_id = $url[count($url) - 2];
+	if (!Token::verifyToken($user_id, $token)) {
+		$user = new User($user_id);
+		$user->setconfirmed(1);
+		User::save($user);
+		echo 'ok';
+	}
+	else
+		echo 'problem';
 };
 
 /**** POST ****/

@@ -8,6 +8,7 @@ require_once("src/data.class.php");
 require_once("src/Creation.php");
 require_once("src/User.php");
 require_once("src/Comment.php");
+require_once("src/Token.php");
 
 if (session_start() === false) {
 	echo "failed to start session ?";
@@ -33,7 +34,7 @@ $website['router']->get([
 	"comment(s)?/\d+" => $getComments,
 	"log(/infos)?" => $logPage,
 	"creation/delete/\d+" => $deleteCreation,
-	"token/\d+/[a-z|0-9]{50}" => $verifyToken,
+	"token/\d+/[a-z0-9]{100}" => $verifyToken,
 	"flush_session" => function() {
 		foreach ($_SESSION as $i => $v)
 			$_SESSION[$i] = null;

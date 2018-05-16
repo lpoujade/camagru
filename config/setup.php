@@ -38,16 +38,16 @@ if ($db->exec("create table comments(
 }
 
 if ($db->exec("create table likes(user_id int, creation_id int);") === FALSE) {
-	echo "failed to create token table : ".print_r($db->errorInfo(), true);
+	echo "failed to create likes table : ".print_r($db->errorInfo(), true);
 	die ;
 }
 
-if ($db->exec("create table token(
+if ($db->exec("create table tokens(
 	id integer primary key,
 	user_id integer,
 	token text);") === FALSE) {
 
-	echo "failed to create token table : ".print_r($db->errorInfo(), true);
+	echo "failed to create tokens table : ".print_r($db->errorInfo(), true);
 	die ;
 }
 

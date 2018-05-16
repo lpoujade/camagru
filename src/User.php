@@ -148,10 +148,9 @@ class User extends Data {
 		$user->setmail($post['mail']);
 		$user->sethash($post['pass']);
 		$user->setconfirmed(0);
-		$token = bin2hex(openssl_random_pseudo_bytes(50));
 		User::save($user);
-		mkdir($DATAS_DIR.$user->getid());
-		mail($user->getmail(), "Welcome to the camagru", $_SERVER['NAME']."/".$user->getid()."/<insert token here>");
+		$token = Token::newToken($user->getid());
+		mail($user->getmail(), "Welcome to the camagru", "Confirm your account using this link : ".$_SERVER['SERVER_NAME']."/".$user->getid()."/".$token);
 		return json_encode(['status' => true, 'reason' => 'Check your mails']);
 	}
 
@@ -160,6 +159,7 @@ class User extends Data {
 		if ($c->id && $c->id != -1) {
 			$r = $db->exec("update users set
 				id = $c->id,
+				confirmed = $c->confirmed,
 				username = '$c->username',
 				mail = '$c->mail'
 			where id = $c->id;");
