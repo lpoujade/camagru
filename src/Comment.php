@@ -12,7 +12,7 @@ class Comment extends Data {
 	private $creation_date;
 	private $content;
 
-	public function __construct(int $id = -1) {
+	public function __construct($id = -1) {
 		global $db;
 		$this->id = $id;
 		if ($id != -1) {

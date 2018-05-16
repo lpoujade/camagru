@@ -15,7 +15,7 @@ if (session_start() === false) {
 }
 
 $interface = function() {
-	echo file_get_contents('templates/home.html');
+	return file_get_contents('templates/home.html');
 };
 
 $clean_post_data = function() {
@@ -28,15 +28,16 @@ $website['router'] = new Router();
 
 $website['router']->get([
 	"" => $interface,
-	"gallery(\/mines|\/\d+)?" => $gallery,
-	"user" => $userPage,
-	"comment(s)?\/\d+" => $getComments,
-	"log(\/infos)?" => $logPage,
-	"creation\/delete\/\d+" => $deleteCreation,
+	"mailme" => $mailMe,
+	"gallery(/mines|/\d+)?" => $gallery,
+	"comment(s)?/\d+" => $getComments,
+	"log(/infos)?" => $logPage,
+	"creation/delete/\d+" => $deleteCreation,
+	"token/\d+/[a-z|0-9]{50}" => $verifyToken,
 	"flush_session" => function() {
 		foreach ($_SESSION as $i => $v)
 			$_SESSION[$i] = null;
-		return ;
+		return json_encode(['status' => true, 'reason' => 'deconnected']);
 	}]);
 
 $website['router']->post([
@@ -45,6 +46,6 @@ $website['router']->post([
 	"comment" => $writeComment,
 	"like" => $likeItem,
 	"creation" => $createItem,
-	"register" => $newUser], $clean_post_data);
+	"register" => "User::create"], $clean_post_data);
 
 $website['router']->respond($_SERVER['REQUEST_URI']);

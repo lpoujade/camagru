@@ -8,7 +8,7 @@ class User extends Data {
 	private $salt;
 	private $confirmed;
 
-	public function __construct(int $id = -1) {
+	public function __construct($id = -1) {
 		global $db;
 		$this->id = $id;
 		if ($id != -1) {
@@ -94,18 +94,18 @@ class User extends Data {
 		return $c;
 	}
 
-	public function getCurrentUser() {
+	static function getCurrentUser() {
 		if (isset($_SESSION['is_connected'])
 			&& $_SESSION['is_connected'] === true
 			&& $_SESSION['user'] != null)
 			return $_SESSION['user'];
 	}
 
-	public function checkpass($id, $pass) {
+	static function checkpass($id, $pass) {
 		global $db;
 		$r = $db->query("select hash,salt from users where id='$id'");
 		$res = $r->fetchAll();
-		if (count($r) != 1) {
+		if (count($res) != 1) {
 			echo "fail?";
 			die ;
 		}
@@ -116,7 +116,7 @@ class User extends Data {
 		return false;
 	}
 
-	public function connect($mail, $pass) {
+	static function connect($mail, $pass) {
 		global $db;
 		$id = false;
 		$r = $db->query("select id from users where mail='$mail'");
@@ -127,7 +127,7 @@ class User extends Data {
 		return null;
 	}
 
-	public function checkmail($mail) {
+	static function checkmail($mail) {
 		global $db;
 
 		$r = $db->query("select id from users where mail='$mail'")->fetchAll();
@@ -138,18 +138,21 @@ class User extends Data {
 
 	}
 
-	public function create($mail, $pass, $username) {
+	static function create() {
+		$post = $_POST;
 		$user = new User();
-		if (User::checkmail($mail) === false)
-			return null;
-		$user->setusername($username);
-		$user->setmail($mail);
-		$user->sethash($pass);
+		if (User::checkmail($post['mail']) === false)
+			return json_encode(['status' => false, 'reason' => 'mail already in use']);
+		$user->setusername($post['username']);
+		$user->setmail($post['mail']);
+		$user->sethash($post['pass']);
 		$user->setconfirmed(0);
-		return $user;
+		$token = bin2hex(openssl_random_pseudo_bytes(50));
+		User::save($user);
+		return json_encode(['status' => true, 'reason' => 'Check your mails']);
 	}
 
-	public function save(User $c) {
+	static function save(User $c) {
 		global $db;
 		if ($c->id && $c->id != -1) {
 			$r = $db->exec("update users set

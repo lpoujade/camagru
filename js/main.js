@@ -1,6 +1,7 @@
 function api_get(url, callback) {
 	var xhr = new XMLHttpRequest();
 	xhr.open('GET', url);
+	xhr.setRequestHeader('Accept', 'application/json');
 	xhr.addEventListener('load', function() {
 		if (callback != null && xhr.response)
 			callback(JSON.parse(xhr.response));
@@ -10,6 +11,8 @@ function api_get(url, callback) {
 
 function show_elem(elem) {
 	/* hide other sections */
+	if (cam.srcObject)
+		stop_webcam();
 	var e = document.getElementById(elem);
 	if (e.style.display != "none")
 		return true;
@@ -32,10 +35,10 @@ handler = {
 		api_get("/gallery", gallery_addimgs);
 	},
 	'create': function() {
-		show_elem('s_create');
 		if (connected === false)
 			handler['account']();
 		else {
+			show_elem('s_create');
 			if (d_userimg.childElementCount >= 3)
 				return ;
 			api_get('/gallery/mines', function(response) {
@@ -56,6 +59,7 @@ handler = {
 					d_userimg.appendChild(div);
 				}
 			});
+			start_cam();
 		}
 	},
 	'logout': function() {
@@ -109,3 +113,7 @@ for(i in menu_links)
 		var name = this.href.split('#')[1];
 		handler[name]();
 	});
+
+btn_mailme.addEventListener('click', function() {
+	api_get('/mailme', null);
+});

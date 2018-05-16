@@ -32,7 +32,7 @@ class Router {
 		if ($prepost)
 			$this->pre['get'] = $prepost;
 		foreach($routes as $url => $func) {
-			$this->urls['get'][$url] = $func;
+			$this->urls['get'][str_replace("/", "\/", $url)] = $func;
 		}
 	}
 
@@ -40,7 +40,7 @@ class Router {
 		if ($prepost)
 			$this->pre['post'] = $prepost;
 		foreach($routes as $url => $func) {
-			$this->urls['post'][$url] = $func;
+			$this->urls['post'][str_replace("/", "\/", $url)] = $func;
 		}
 	}
 
@@ -59,12 +59,14 @@ class Router {
 			if (preg_match("/^\/$url$/", $req_uri)) {
 				if ($this->pre[$method])
 					$this->pre[$method]();
+				if (!strcmp($_SERVER['HTTP_ACCEPT'], "application/json"))
+					header("Content-type:application/json");
 				echo $func($req_uri);
 				return ;
 			}
 		}
 		http_response_code(404);
-		echo 'not found';
+		echo json_encode('not found');
 		//echo render('home', ['content' => '<h1>404</h1>']);
 	}
 }

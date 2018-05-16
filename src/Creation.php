@@ -75,7 +75,7 @@ class Creation extends Data {
 	/*
 	 * return @array of Creations
 	*/
-	public function getAll($offset=0, $items=5) {
+	static function getAll($offset=0, $items=5) {
 		global $db;
 
 		/* TODO sort by date */
@@ -87,7 +87,7 @@ class Creation extends Data {
 		return ($creations);
 	}
 
-	public function create($image) {
+	static function create($image) {
 		$c = new Creation(-1);
 		$c->setimage($image);
 		$c->setuserid($_SESSION['user']->getid());
@@ -95,7 +95,7 @@ class Creation extends Data {
 		return $c;
 	}
 
-	public function save(Creation $c) {
+	static function save(Creation $c) {
 		global $db;
 		if ($c->id > -1) {
 			$r = $db->exec("update creations set
@@ -110,7 +110,7 @@ class Creation extends Data {
 		return $r;
 	}
 
-	public function remove(Creation $c) {
+	static function remove(Creation $c) {
 		global $db;
 
 		$r = $db->exec("delete from likes where creation_id = ".$c->getid());

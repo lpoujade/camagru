@@ -1,7 +1,7 @@
 <?php
 
 class Data {
-	public function jsonify($c) {
+	static function jsonify($c) {
 		$r = [];
 		foreach ($c as $v) {
 			$r[] = $v->toArray();
