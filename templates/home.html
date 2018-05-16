@@ -70,10 +70,11 @@
 						<div id="filters" class="row"></div>
 
 						<form id="form_creation" class="row">
-							<input id="creation_mask" type="file" class="col s3" />
+							<input id="creation_mask" type="file" class="btn col s3" />
 							<a disabled id="btn_capture" class="waves-effect waves-light btn-large col s12">capture</a>
 						</form>
 
+						<canvas id="canvas_photo" width=500 height=350></canvas>
 					</div>
 					<div class="col s4" id="d_userimg">
 						<h5>Your images</h5>
@@ -163,8 +164,4 @@
 	<script src="js/form_to_xhr.js"></script>
 	<script src="js/cam.js"></script>
 	<script src="js/main.js"></script>
-	<script>
-		/* load first set of images */
-		handler['gallery']();
-	</script>
 </html>

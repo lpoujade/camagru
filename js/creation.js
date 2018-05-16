@@ -16,7 +16,6 @@ function handleFile(files) {
 		img.classList.add("col");
 		img.classList.add("s2");
 		img.addEventListener('click', function() {
-			console.log(this);
 			calc.push(this.cloneNode());
 			preview.appendChild(calc[calc.length - 1]);
 			calc[calc.length - 1].style.position = "absolute";
@@ -72,10 +71,5 @@ creation_mask.addEventListener('change', function() {
 });
 
 btn_capture.addEventListener('click', function() {
-	console.log(cam.imgCapture);
-	for (i in calc) {
-		console.log(calc[i]);
-		console.log(calc[i].offsetTop);
-		console.log(calc[i].offsetLeft);
-	}
+	take_photo();
 });

@@ -1,6 +1,5 @@
 
 cards = [];
-void_card = null;
 void_card = document.getElementById('d_img_0');
 void_card.remove();
 void_card.id = 'd_img_';

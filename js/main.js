@@ -83,18 +83,29 @@ handler = {
 	}
 };
 
+
+function check_url() {
+	var last_url_elem = window.location.href.split('/').pop().split('#').pop();
+	if (last_url_elem)
+		handler[window.location.href.split('/').pop().split('#').pop()]();
+	else
+		handler['gallery'];
+}
+
+connected = false;
+changes = false;
+
+api_get('/log', function(response) {
+	if (response.status == 1)
+		connected = true;
+	else
+		connected = false;
+	check_url();
+});
+
 var menu_links = [a_gallery, a_create, a_account, a_logout];
 for(i in menu_links)
 	menu_links[i].addEventListener('click', function() {
 		var name = this.href.split('#')[1];
 		handler[name]();
 	});
-
-changes = false;
-api_get('/log', function(response) {
-	if (response.status == 1)
-		connected = true;
-	else
-		connected = false;
-});
-
