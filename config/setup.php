@@ -20,7 +20,7 @@ if ($db->exec("create table creations(
 	id integer primary key,
 	user_id integer,
 	img_path text,
-	creation_date text);") === FALSE) {
+	creation_date integer);") === FALSE) {
 
 	echo "failed to create creations table : ".print_r($db->errorInfo(), true);
 	die ;

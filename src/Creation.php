@@ -6,6 +6,7 @@ class Creation extends Data {
 	private $likes;
 	private $likes_count;
 	private $user_id;
+	private $creation_date;
 
 	public function __construct($id=-1, $image="", $user_id=-1, $creation_date="") {
 		global $db;
@@ -58,6 +59,14 @@ class Creation extends Data {
 		$this->id = $value;
 	}
 
+	public function getcreation_date() {
+		return $this->creation_date;
+	}
+
+	public function setcreation_date($value) {
+		$this->creation_date = $value;
+	}
+
 	public function getuserid() {
 		return $this->user_id;
 	}
@@ -80,8 +89,7 @@ class Creation extends Data {
 	static function getAll($offset=0, $items=5) {
 		global $db;
 
-		/* TODO sort by date */
-		$pdo_statement = $db->query("select * from creations limit $items offset $offset");
+		$pdo_statement = $db->query("select * from creations order by creation_date desc limit $items offset $offset");
 		$res = $pdo_statement->fetchAll();
 		$creations = [];
 		foreach($res as $c)
@@ -93,6 +101,7 @@ class Creation extends Data {
 		$c = new Creation(-1);
 		$c->setimage($image);
 		$c->setuserid($_SESSION['user']->getid());
+		$c->setcreation_date(getdate()[0]);
 		Creation::save($c);
 		return $c;
 	}
@@ -102,11 +111,12 @@ class Creation extends Data {
 		if ($c->id > -1) {
 			$r = $db->exec("update creations set
 				id = {$c->getid()},
+				creation_date = {$c->getcreation_date()},
 				img_path = '{$c->getimage()}', ''
 			where id= {$c->getid()};");
 		} else {
 			$r = $db->exec("insert into creations values
-				(NULL, '{$c->getuserid()}', '{$c->getimage()}', '');");
+				(NULL, '{$c->getuserid()}', '{$c->getimage()}', '{$c->getcreation_date()}');");
 			$c->setid($db->lastInsertId());
 		}
 		return $r;
