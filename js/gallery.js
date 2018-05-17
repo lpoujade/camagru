@@ -1,5 +1,6 @@
 
 cards = [];
+c_img_0.id = 'c_img_';
 void_card = document.getElementById('d_img_0');
 void_card.remove();
 void_card.id = 'd_img_';
@@ -22,8 +23,7 @@ function gallery_addimgs(imgs) {
 		var div = void_card.cloneNode(true);
 		Object.assign(div, void_card);
 		div.id += imgs[i].id;
-		div.style.backgroundImage = 'url("/datas/'+imgs[i].id+'.png")';
-		div.getElementsByTagName('span')[0].innerHTML = imgs[i].id;
+		div.getElementsByTagName('img')[0].src = "/datas/"+imgs[i].id+".png";
 		div.addLike(imgs[i].likes_count);
 		d_gallery.appendChild(div);
 		cards.push(div);
@@ -31,8 +31,8 @@ function gallery_addimgs(imgs) {
 	if (i < 4) {
 		btn_moreimgs.className += " red";
 		btn_moreimgs.innerHTML = "no more images";
+		btn_moreimgs.setAttribute("disabled", true);
 	}
-
 }
 
 btn_moreimgs.addEventListener('click', function() {

@@ -26,9 +26,14 @@ function stop_webcam() {
 
 function take_photo() {
 	var canv = document.createElement('canvas');
+	/*
 	var stream = cam.srcObject.getTracks()[0];
 	canv.height = stream.getCapabilities()['height'].max;
 	canv.width = stream.getCapabilities()['width'].max;
+	*/
+
+	canv.height = 900;
+	canv.width = 800;
 
 	ctx = canv.getContext('2d');
 	ctx.drawImage(cam, 0,0, canv.width, canv.height);

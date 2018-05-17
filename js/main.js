@@ -47,13 +47,14 @@ handler = {
 					var div = ac_div.cloneNode(true);
 					div.style.display = "";
 					div.id = 'd_userimg_' + response[i].id;
-					item_id = response[i].id;
-					div.getElementsByTagName('span')[0].innerHTML = response[i].image;
+					div.getElementsByTagName('img')[0].id += response[i].id;
+					div.getElementsByTagName('img')[0].src = "/datas/"+response[i].id+".png";
 					div.getElementsByClassName('btn')[0].addEventListener('click', function() {
-						var elem = this.parentNode.parentNode.parentNode;
+						var elem = this.parentNode.parentNode;
 						api_get('/creation/delete/' + elem.id.split('_').pop());
 						var elem_gallery = document.getElementById('d_img_' + elem.id.split('_').pop());
-						elem_gallery.remove()
+						if (elem_gallery)
+							elem_gallery.remove()
 						elem.remove();
 					});
 					d_userimg.appendChild(div);
@@ -89,11 +90,18 @@ handler = {
 
 
 function check_url() {
-	var last_url_elem = window.location.href.split('/').pop().split('#').pop();
-	if (last_url_elem)
-		handler[window.location.href.split('/').pop().split('#').pop()]();
+	var url = window.location.href.split('/').pop().split('#');
+	last_url_elem = null;
+	if (url)
+		last_url_elem = url.pop().replace('?', '');
+	if (last_url_elem && strlen(last_url_elem) > 1 && handler[last_url_elem])
+	{
+		handler[last_url_elem]();
+		console.log("fail");
+	}
 	else
-		handler['gallery'];
+		handler['gallery']();
+	console.log(last_url_elem);
 }
 
 connected = false;
@@ -114,6 +122,7 @@ for(i in menu_links)
 		handler[name]();
 	});
 
-btn_mailme.addEventListener('click', function() {
-	api_get('/mailme', null);
+lever.addEventListener('click', function() {
+	notif_mail.value = (notif_mail.value == 1 ? 0 : 1);
+	console.log(notif_mail.value);
 });

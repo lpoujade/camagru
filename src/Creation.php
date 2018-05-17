@@ -36,7 +36,9 @@ class Creation extends Data {
 			$this->likes[] = $user_id;
 			$this->likes_count++;
 			$r = $db->exec("insert into likes values($user_id, $this->id)");
+			return true;
 		}
+		return false;
 	}
 
 	public function toArray() {

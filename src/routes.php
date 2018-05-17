@@ -192,6 +192,7 @@ $modUser = function($url) {
 	$user->setusername($post['username']);
 	if (isset($post['newpass']))
 		$user->sethash($post['newpass']);
+	$user->setnotif_mail($post['notif_mail']);
 	if (User::save($user) === true)
 		return json_encode(['status' => true]);
    	return json_encode(['status' => false, 'reason' => 'unknow']);
@@ -207,6 +208,10 @@ $writeComment = function($url) {
 	$com->setcreation_id($post['creation_id']);
 	$com->setcontent($post['content']);
 	$com->setuser_id($user->getid());
+	$creation = new Creation($post['creation_id']);
+	$owner = new User($creation->getuserid());
+	if ($owner->getnotif_mail())
+		mail($owner->getmail(), $user->getusername()." commented one of your creation !", "that's all");
 	if ($com->save() === false)
 		return json_encode(['status' => false, 'reason' => 'unknow error']);
 	else
@@ -218,6 +223,8 @@ $likeItem = function() {
 	$user = User::getCurrentUser();
 	if (!$user)
 		return json_encode(['status' => false, 'reason' => 'not connected']);
-	$c->addLike($user->getid());
+	$r = $c->addLike($user->getid());
+	if ($r == false)
+		return json_encode(['status' => false, 'reason' => 'you already liked this']);
 	return json_encode(['status' => true]);
 };

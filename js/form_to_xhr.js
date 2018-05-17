@@ -54,11 +54,13 @@ form_register.addEventListener('submit', function() {
 						"pass": form_register.pass.value}, window.handler['account']);
 });
 
-btn_moduser.addEventListener('click', function() {
+//btn_moduser.addEventListener('click', function() {
+form_moduser.addEventListener('submit', function() {
 	post_form('/mod', {
 		'username': mod_username.value,
 		'mail': mod_mail.value,
 		'pass': mod_pass.value,
+		'notif_mail': notif_mail.value,
 		'newpass': mod_pass_new.value}, function() {
 		console.log('posted');
 	});

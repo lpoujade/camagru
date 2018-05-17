@@ -182,14 +182,16 @@ class User extends Data {
 		global $db;
 		if ($c->confirmed != 1)
 			$c->confirmed = 0;
+		if ($c->notif_mail != 1)
+			$c->notif_mail = 0;
 		if ($c->id && $c->id != -1) {
 			$r = $db->exec("update users set
-				id = $c->id,
 				confirmed = $c->confirmed,
 				username = '$c->username',
 				hash = '$c->hash',
 				salt = '$c->salt',
-				mail = '$c->mail'
+				mail = '$c->mail',
+				notif_mail = $c->notif_mail
 			where id = $c->id;");
 		} else {
 			$r = $db->exec("insert into users values

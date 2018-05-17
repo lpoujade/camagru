@@ -99,13 +99,13 @@ class Comment extends Data {
 		return $r;
 	}
 
-	public function remove(Comment $c) {
+	static function remove(Comment $c) {
 		global $db;
 		$r = $db->exec("delete from comments where id={$c->getid()}");
 		return $r;
 	}
 
-	public function getFor($creation_id = -1) {
+	static function getFor($creation_id = -1) {
 		global $db;
 
 		$r = $db->query("select

@@ -9,6 +9,17 @@ body {
 	margin-top: 10px;
 }
 
+/*
+.card {
+	min-height: 15em;
+}
+*/
+
+.gal_imgs,.create_previmgs {
+	height: 100%;
+	width: 100%;
+}
+
 main {
 	flex: 1 0 auto;
 }
