@@ -156,6 +156,8 @@ class User extends Data {
 
 	static function save(User $c) {
 		global $db;
+		if ($c->confirmed != 1)
+			$c->confirmed = 0;
 		if ($c->id && $c->id != -1) {
 			$r = $db->exec("update users set
 				id = $c->id,

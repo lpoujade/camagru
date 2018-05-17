@@ -1,7 +1,7 @@
 function notif(resp) {
 	var popup = document.getElementById("d_notif");
 	popup.style.display = "";
-	if (resp.status) {
+	if (resp.status === true) {
 		popup.style.background = "green";
 		popup.firstElementChild.innerHTML = 'Success ' + (resp.reason ?resp.reason: '!');
 	}

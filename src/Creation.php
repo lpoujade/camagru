@@ -32,7 +32,7 @@ class Creation extends Data {
 
 	public function addLike(int $user_id) {
 		global $db;
-		if (!$this->like || !in_array($user_id, $this->likes)) {
+		if (!$this->likes || !in_array($user_id, $this->likes)) {
 			$this->likes[] = $user_id;
 			$this->likes_count++;
 			$r = $db->exec("insert into likes values($user_id, $this->id)");
