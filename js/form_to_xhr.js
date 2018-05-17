@@ -44,8 +44,8 @@ function post_form(url, datas, callback) {
 }
 
 form_log.addEventListener('submit', function() {
-	post_form("/log", {"mail": form_log.mail.value,
-						"pass": form_log.pass.value}, window.handler['account']);
+	post_form("/log", {"mail_log": form_log.mail_log.value,
+						"pass_log": form_log.pass_log.value}, window.handler['account']);
 });
 
 form_register.addEventListener('submit', function() {
@@ -55,7 +55,15 @@ form_register.addEventListener('submit', function() {
 });
 
 btn_moduser.addEventListener('click', function() {
-	post_form('/mod', {'username': mod_username.value, 'mail': mod_mail.value, 'pass': mod_pass.value}, function() {
+	post_form('/mod', {
+		'username': mod_username.value,
+		'mail': mod_mail.value,
+		'pass': mod_pass.value,
+		'newpass': mod_pass_new.value}, function() {
 		console.log('posted');
 	});
+});
+
+form_forgot.addEventListener('submit', function() {
+	post_form('/forgot', {'mail_forgot': mail_forgot.value});
 });

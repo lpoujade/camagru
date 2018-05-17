@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+		<title>Camagru</title>
+		<link rel="stylesheet" href="/css/snackbar.css" />
+		<link rel="stylesheet" href="/css/materialize/css/materialize.css" />
+		<link rel="stylesheet" href="/css/main.css" />
+	</head>
+	<body id="body">
+		<header>
+			<div class="navbar-fixed">
+				<nav>
+					<div class="nav-wrapper">
+						<a href="" class="brand-logo">Camagru</a>
+						<ul class="right">
+							<li><a id="a_gallery" href="#gallery">Gallery</a></li>
+							<li><a id="a_create" href="#create">Create</a></li>
+							<li><a id="a_account" href="#account">Account</a></li>
+							<li><a id="a_logout" href="#logout">Logout</a></li>
+						</ul>
+					</div>
+				</nav>
+			</div>
+		</header>
+
+		<div id="d_notif" class="snackbar-container snackbar-pos top-right" style="opacity: 0;display: none">
+			<p id="p_notif">{message}</p>
+			<button class="action" id="b_notif" style="display:none">Dismiss</button>
+		</div>
+
+		<div id="page_content" class="container">
+			<form id="form_newpass" method="POST" action="/reinit_pass">
+				<label for="pass_log">New password :</label>
+				<input type="password" class="form-control" name="new_pass" id="pass_log" placeholder="Password">
+				<input name="uid" id="uid" type="text" style="display: none"></input>
+				<input name="token" id="token"type="text" style="display: none"></input>
+				<button class="btn" type="submit">save new password</button>
+			</form>
+		</div><!-- /page_content -->
+
+		<!--
+	  <footer class="page-footer">
+	  <div class="container">
+	  <a class="grey-text text-lighten-4 right" href="#!">thank to Materialize.css</a>
+	  </div>
+	  </footer>
+		-->
+
+	</body>
+	<script>
+var url = window.location.href.split('/');
+var uid = document.getElementById('uid');
+var token = document.getElementById('token');
+uid.value = url[url.length - 2];
+token.value = url[url.length - 1];
+	</script>
+</html>

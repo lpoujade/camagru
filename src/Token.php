@@ -11,12 +11,18 @@ class Token {
 	static function verifyToken($user_id, $token) {
 		global $db;
 
-		$r = $db->query("select token from tokens where user_id = ".$user_id)->fetchAll();
+		$r = $db->query("select token from tokens where user_id = $user_id and token = '$token'")->fetchAll();
 		if (count($r) != 1) {
 			echo "no token (or more than one token?)";
 			die ;
 		}
 		$res = array_pop($r);
 		return strcmp($token, $res['token']);
+	}
+
+	static function deleteToken($token) {
+		global $db;
+
+		$r = $db->exec("delete from tokens where token = '$token'");
 	}
 }

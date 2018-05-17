@@ -21,21 +21,23 @@ function start_cam() {
 }
 
 function stop_webcam() {
-	cam.srcObject.stop();
+	cam.srcObject.getTracks()[0].stop()
 }
 
 function take_photo() {
 	var canv = document.createElement('canvas');
-	canv.width = "1080";
-	canv.height = "960";
+	var stream = cam.srcObject.getTracks()[0];
+	canv.height = stream.getCapabilities()['height'].max;
+	canv.width = stream.getCapabilities()['width'].max;
 
 	ctx = canv.getContext('2d');
 	ctx.drawImage(cam, 0,0, canv.width, canv.height);
 	var calcs = [];
 	for (i in calc) {
 		calcs.push({'image': calc[i].src,
-		   	'ofTop': calc[i].offsetTop - cam.offsetTop,
-		   	'ofLeft': calc[i].offsetLeft - cam.offsetLeft});
+			'ofTop': calc[i].offsetTop - cam.offsetTop,
+			'ofLeft': calc[i].offsetLeft - cam.offsetLeft,
+			'width': calc[i].width, 'height': calc[i].height});
 	}
 	console.log(calcs);
 	post_form('/creation', {'photo': canv.toDataURL("image/png"), 'calcs': JSON.stringify(calcs)}, function() {console.log('image posted');});

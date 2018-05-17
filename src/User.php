@@ -12,10 +12,13 @@ class User extends Data {
 		global $db;
 		$this->id = $id;
 		if ($id != -1) {
-			$r = $db->query("select username,mail,confirmed from users where id=$id")->fetchAll()[0];
+			$r = $db->query("select * from users where id=$id")->fetchAll()[0];
 			$this->username = $r['username'];
 			$this->mail = $r['mail'];
 			$this->confirmed = $r['confirmed'];
+			$this->hash = $r['hash'];
+			$this->salt = $r['salt'];
+			$this->notif_mail = $r['notif_mail'];
 		}
 	}
 
@@ -59,8 +62,8 @@ class User extends Data {
 
 	public function sethash($pass) {
 		/* hash pass */
-		$this->salt = 'lol';
-		$this->hash =  hash('whirlpool', $pass.$this->salt);
+		$this->salt = bin2hex(openssl_random_pseudo_bytes(2));
+		$this->hash = hash('whirlpool', $pass.$this->salt);
 	}
 
 	public function gethash() {
@@ -121,6 +124,8 @@ class User extends Data {
 		$id = false;
 		$r = $db->query("select id from users where mail='$mail'");
 		$res = $r->fetchAll();
+		if (count($res) < 1)
+			return null;
 		$id = $res[0]['id'];
 		if (User::checkpass($id, $pass) === true)
 			return new User($id);
@@ -129,13 +134,30 @@ class User extends Data {
 
 	static function checkmail($mail) {
 		global $db;
-
 		$r = $db->query("select id from users where mail='$mail'")->fetchAll();
-		if (count($r) > 0) {
+		if (count($r) > 0)
 			return false;
-		}
 		return true;
+	}
 
+	static function getBy(array $datas) {
+		global $db;
+
+		$conditions = "";
+		foreach ($datas as $crit => $value) {
+			if (strlen($conditions > 0))
+				$conditions .= " and ";
+			$conditions .= $crit." = '$value'";
+		}
+		if (strlen($conditions) <= 1)
+			return (null);
+		$r = $db->query("select id from users where ".$conditions.";")->fetchAll();
+		$users = [];
+		foreach ($r as $v)
+			$users[] = new User($v['id']);
+		if (count($users) == 1)
+			return array_pop($users);
+		return $users;
 	}
 
 	static function create() {
@@ -150,7 +172,9 @@ class User extends Data {
 		$user->setconfirmed(0);
 		User::save($user);
 		$token = Token::newToken($user->getid());
-		mail($user->getmail(), "Welcome to the camagru", "Confirm your account using this link : ".$_SERVER['SERVER_NAME']."/".$user->getid()."/".$token);
+		error_log("http://".$_SERVER['SERVER_NAME'].":".$_SERVER['SERVER_PORT']."/token/".$user->getid()."/".$token);
+		mail($user->getmail(), "Welcome to the camagru",
+		   	"Confirm your account using this link : http://".$_SERVER['SERVER_NAME'].":".$_SERVER['SERVER_PORT']."/token/".$user->getid()."/".$token);
 		return json_encode(['status' => true, 'reason' => 'Check your mails']);
 	}
 
@@ -163,6 +187,8 @@ class User extends Data {
 				id = $c->id,
 				confirmed = $c->confirmed,
 				username = '$c->username',
+				hash = '$c->hash',
+				salt = '$c->salt',
 				mail = '$c->mail'
 			where id = $c->id;");
 		} else {

@@ -1,8 +1,8 @@
 
 ## TODO
 ~ gestion utilisateur
-	* confirmation inscription via mail
-	* modification pass
+	. confirmation inscription via mail
+	~ modification pass
 	* mail de reinitialisation de mot de passe
 	. modification username, mail
 	. mail, username, mot de passe(hash)
@@ -19,10 +19,10 @@
 	-js 
 		* webcam ou upload photo
 		* images ajoutables à uploader
-		* pas de photo tant que pas d'images ajoutées
+		. pas de photo tant que pas d'images ajoutées
 	-php
 		* dates
-		* traitement de l'image en php
+		~ traitement de l'image en php
 		. comments
 		. suppressions des ses images possible
 
@@ -30,23 +30,3 @@
 	. point d'entré index.php
 	. config/setup.php -> initialisation automatique du site
 	. config/database.php conf db format pdo
-
-## PAGES
-* /(gallery)
-* /account
-	* /account/set/ (post) [old_pass;mail;pass;username]
-* /create (get)
-* /create (post)
-* /log
-* /delog (no html response) (redirect)
-* /token (no html response) (redirect)
-
-## DB
-* users
-	id, username, mail, pass, salt
-* creations
-	id, user_id, creation_date, raw_image
-* comments
-	id, creation_id, user_id, creation_date, text
-* token
-	id, user_id, token_value

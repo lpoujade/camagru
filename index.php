@@ -35,6 +35,7 @@ $website['router']->get([
 	"log(/infos)?" => $logPage,
 	"creation/delete/\d+" => $deleteCreation,
 	"token/\d+/[a-z0-9]{100}" => $verifyToken,
+	"forgot/\d+/[a-z0-9]{100}" => $forgot_verifyToken,
 	"flush_session" => function() {
 		foreach ($_SESSION as $i => $v)
 			$_SESSION[$i] = null;
@@ -46,6 +47,8 @@ $website['router']->post([
 	"mod" => $modUser,
 	"comment" => $writeComment,
 	"like" => $likeItem,
+	"forgot" => $forgotPw,
+	"reinit_pass" => $reinitPw,
 	"creation" => $createItem,
 	"register" => "User::create"], $clean_post_data);
 

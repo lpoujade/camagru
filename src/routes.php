@@ -60,23 +60,34 @@ $verifyToken = function($url) {
 	$url = explode("/", $url);
 	$token = $url[count($url) - 1];
 	$user_id = $url[count($url) - 2];
-	if (!Token::verifyToken($user_id, $token)) {
+	if (!Token::verifyToken($user_id, $token)) { 
 		$user = new User($user_id);
 		$user->setconfirmed(1);
 		User::save($user);
-		echo 'ok';
+		Token::deleteToken($token);
+		header('Location: /#account');
 	}
 	else
 		echo 'problem';
 };
 
+$forgot_verifyToken = function($url) {
+	$url = explode("/", $url);
+	$token = $url[count($url) - 1];
+	$user_id = $url[count($url) - 2];
+	if (!Token::verifyToken($user_id, $token)) { 
+		return file_get_contents("templates/forgotpw.html");
+	}
+};
 /**** POST ****/
 
 $logUser = function($url) {
-	$user = User::connect($_POST['mail'], $_POST['pass']);
+	$user = User::connect($_POST['mail_log'], $_POST['pass_log']);
 	if ($user === null) {
 		return json_encode(['status' => false, 'reason' => 'bad credentials']);
 	}
+	if (!$user->getconfirmed())
+		return json_encode(['status' => false, 'reason' => 'please confirm your mail first']);
 	$_SESSION['is_connected'] = true;
 	$_SESSION['user'] = $user;
 	return json_encode(['status' => true,
@@ -92,9 +103,37 @@ $newUser = function($url) {
 	return json_encode(['status' => true]);
 };
 
+$reinitPw = function($url) {
+	$post = $_POST;
+	if (!Token::verifyToken($post['uid'], $post['token'])) {
+		$user = new User($post['uid']);
+		$user->sethash($post['new_pass']);
+		User::save($user);
+		header('Location: /#account');
+		return ;
+	}
+	return json_encode(['status' => false, 'reason' => 'hm']);
+};
+
+$forgotPw = function($url) {
+	$post = $_POST;
+	if (!isset($post['mail_forgot']) || strlen($post['mail_forgot']) == 0)
+		return json_encode(['status' => false, 'reason' => 'no mail']);
+	if (!($user = User::getBy(['mail' => $post['mail_forgot']])))
+		return json_encode(['status' => false, 'reason' => 'no user with this mail']);
+	$token = Token::newToken($user->getid());
+	error_log("http://".$_SERVER['SERVER_NAME'].":".$_SERVER['SERVER_PORT']."/forgot/".$user->getid()."/".$token);
+	mail($user->getmail(), "[camagru] change your password",
+	   	"… via this link: http://".$_SERVER['SERVER_NAME'].":".$_SERVER['SERVER_PORT']."/forgot/".$user->getid()."/".$token);
+	return json_encode(['status' => true, 'reason' => 'check your mails']);
+};
+
 $createItem = function($url) {
 	global $DATAS_DIR;
 	$post = $_POST;
+	$user = User::getCurrentUser();
+	if (!$user)
+		return json_encode(['status' => false, 'reason' => 'not connected']);
 	$b64_img = substr($post['photo'], strpos($post['photo'], ",") + 1);
 	$img = imagecreatefromstring(base64_decode($b64_img));
 	if ($img === false) {
@@ -113,7 +152,6 @@ $createItem = function($url) {
 		if ($r === false)
 			return json_encode(['status' => false, 'reason' => 'failed to copy filter']);
 	}
-	$user = User::getCurrentUser();
 	$c = Creation::create("finally useless");
 	if ($c === null || $c === false) {
 		return json_encode(['status' => false, 'reason' => 'failed to create item']);
@@ -146,8 +184,14 @@ $modUser = function($url) {
 		return json_encode(['status' => false, 'reason' => 'not connected']);
 	if (!User::checkpass($user->getid(), $post['pass']))
 		return json_encode(['status' => false, 'reason' => 'bad password']);
-	$user->setmail($post['mail']);
+	if (strcmp($post['mail'], $user->getmail())) {
+		if (User::checkmail($post['mail']) === false)
+			return json_encode(['status' => false, 'reason' => 'mail already in use']);
+		$user->setmail($post['mail']);
+	}
 	$user->setusername($post['username']);
+	if (isset($post['newpass']))
+		$user->sethash($post['newpass']);
 	if (User::save($user) === true)
 		return json_encode(['status' => true]);
    	return json_encode(['status' => false, 'reason' => 'unknow']);
@@ -175,6 +219,5 @@ $likeItem = function() {
 	if (!$user)
 		return json_encode(['status' => false, 'reason' => 'not connected']);
 	$c->addLike($user->getid());
-	//Creation::save($c); // || $c->save();
 	return json_encode(['status' => true]);
 };
