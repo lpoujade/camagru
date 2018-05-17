@@ -134,8 +134,9 @@ $createItem = function($url) {
 	$user = User::getCurrentUser();
 	if (!$user)
 		return json_encode(['status' => false, 'reason' => 'not connected']);
-	$b64_img = substr($post['photo'], strpos($post['photo'], ",") + 1);
-	$img = imagecreatefromstring(base64_decode($b64_img));
+	$str_img = base64_decode(substr($post['photo'], strpos($post['photo'], ",") + 1));
+	$is = getimagesizefromstring($str_img);
+	$img = imagecreatefromstring($str_img);
 	if ($img === false) {
 		echo "failed to create initial photo";
 		die;
@@ -145,10 +146,14 @@ $createItem = function($url) {
 		$b64_calc = substr($v->image, strpos($v->image, ",") + 1);
 		$raw_calc = base64_decode($b64_calc);
 		$im = imagecreatefromstring($raw_calc);
-		$is = getimagesizefromstring($raw_calc);
-		if ($im === false)
+		$filter_size = getimagesizefromstring($raw_calc);
+		$filter = imagecreate($v->width, $v->height);
+		$r = imagecopyresized($filter, $im, 0, 0, 0, 0, $v->width, $v->height, $filter_size[0], $filter_size[1]);
+		if ($im === false || $filter === false || $r === false)
 			return json_encode(['status' => false, 'reason' => 'failed to create initial photo']);
-		$r = imagecopy($img, $im, $v->ofLeft, $v->ofTop, 0, 0, $is[0], $is[1]);
+		$r = imagecopy($img, $filter, $v->ofLeft, $v->ofTop, 0, 0, $v->width, $v->height);
+		error_log("dest: (".$is[0].",".$is[1].") ; filter: (".$v->width.",".$v->height.") ; offset top: ".$v->ofTop.", offset left: ".$v->ofLeft);
+		//$r = imagecopyresized($img, $im, $v->ofLeft, $v->ofTop, 0, 0, $is[0], $is[1], $v->width, $v->height);
 		if ($r === false)
 			return json_encode(['status' => false, 'reason' => 'failed to copy filter']);
 	}

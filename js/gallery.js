@@ -29,7 +29,6 @@ function gallery_addimgs(imgs) {
 		cards.push(div);
 	}
 	if (i < 4) {
-		btn_moreimgs.className += " red";
 		btn_moreimgs.innerHTML = "no more images";
 		btn_moreimgs.setAttribute("disabled", true);
 	}

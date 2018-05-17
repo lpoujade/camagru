@@ -126,3 +126,15 @@ lever.addEventListener('click', function() {
 	notif_mail.value = (notif_mail.value == 1 ? 0 : 1);
 	console.log(notif_mail.value);
 });
+
+var prop_filters = document.getElementsByClassName('masks');
+for (i in prop_filters) {
+	prop_filters[i].addEventListener('click', function() {
+		calc.push(this.cloneNode());
+		preview.appendChild(calc[calc.length - 1]);
+		calc[calc.length - 1].style.position = "absolute";
+		calc[calc.length - 1].style.cursor = "move";
+		dragElement(calc[calc.length - 1]);
+		btn_capture.removeAttribute("disabled");
+	});
+}
