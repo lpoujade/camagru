@@ -1,8 +1,4 @@
 
-function onform_sent(resp) {
-	console.log(resp);
-}
-
 calc = [];
 
 function handleFile(files) {
@@ -68,8 +64,8 @@ function dragElement(elmnt) {
 btn_clearfilters.addEventListener('click', function() {
 	for (c in calc) {
 		calc[c].remove();
-		calc.splice(c, 1);
 	}
+	calc = [];
 	btn_capture.setAttribute('disabled', true);
 });
 

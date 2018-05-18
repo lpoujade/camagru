@@ -3,7 +3,7 @@ function api_get(url, callback) {
 	xhr.open('GET', url);
 	xhr.setRequestHeader('Accept', 'application/json');
 	xhr.addEventListener('load', function() {
-		if (callback != null && xhr.response)
+		if (callback != null)
 			callback(JSON.parse(xhr.response));
 	});
 	xhr.send();
@@ -71,12 +71,15 @@ handler = {
 	'account': function() {
 		show_elem('s_account');
 		api_get('/log/infos', function(response) {
-			if (response.status == 1) {
+			if (response.status == true) {
 				d_account.style.display = "";
 				d_logform.style.display = "none";
 				mod_mail.value = response.mail;
 				mod_username.value = response.user;
 				span_username.innerHTML = response.user + " " + response.mail;
+				if (response.notif_mail == 1 && notif_mail.value != 1) {
+					lever.click();
+				}
 				connected = true;
 			} else {
 				d_account.style.display = "none";
@@ -95,13 +98,9 @@ function check_url() {
 	if (url)
 		last_url_elem = url.pop().replace('?', '');
 	if (last_url_elem && strlen(last_url_elem) > 1 && handler[last_url_elem])
-	{
 		handler[last_url_elem]();
-		console.log("fail");
-	}
 	else
 		handler['gallery']();
-	console.log(last_url_elem);
 }
 
 connected = false;
@@ -118,22 +117,22 @@ api_get('/log', function(response) {
 var menu_links = [a_gallery, a_create, a_account, a_logout];
 for(i in menu_links)
 	menu_links[i].addEventListener('click', function() {
-		var name = this.href.split('#')[1];
+		var name = this.id.replace("a_", "");
 		handler[name]();
 	});
 
 lever.addEventListener('click', function() {
 	notif_mail.value = (notif_mail.value == 1 ? 0 : 1);
-	console.log(notif_mail.value);
 });
 
 var prop_filters = document.getElementsByClassName('masks');
-for (i in prop_filters) {
+for (i=0; i < prop_filters.length; i++) {
 	prop_filters[i].addEventListener('click', function() {
 		calc.push(this.cloneNode());
 		preview.appendChild(calc[calc.length - 1]);
 		calc[calc.length - 1].style.position = "absolute";
 		calc[calc.length - 1].style.cursor = "move";
+		calc[calc.length - 1].className = "";
 		dragElement(calc[calc.length - 1]);
 		btn_capture.removeAttribute("disabled");
 	});

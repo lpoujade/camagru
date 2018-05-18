@@ -33,6 +33,7 @@ $logPage = function($url) {
 
 	if ($infos && $r['status'] == true) {
 		$r['mail'] = $user->getmail();
+		$r['notif_mail'] = $user->getnotif_mail();
 	}
 	return json_encode($r);
 };
@@ -137,23 +138,30 @@ $createItem = function($url) {
 	$str_img = base64_decode(substr($post['photo'], strpos($post['photo'], ",") + 1));
 	$is = getimagesizefromstring($str_img);
 	$img = imagecreatefromstring($str_img);
-	if ($img === false) {
-		echo "failed to create initial photo";
-		die;
-	}
+	if ($img === false || $is === false)
+		return json_encode(['status' => false, 'reason' => 'bad images']);
 	$calcs = json_decode($post['calcs']);
 	foreach ($calcs as $v) {
+		/*
 		$b64_calc = substr($v->image, strpos($v->image, ",") + 1);
 		$raw_calc = base64_decode($b64_calc);
 		$im = imagecreatefromstring($raw_calc);
+		if ($im === false)
+			return json_encode(['status' => false, 'reason' => 'bad images']);
 		$filter_size = getimagesizefromstring($raw_calc);
 		$filter = imagecreate($v->width, $v->height);
 		$r = imagecopyresized($filter, $im, 0, 0, 0, 0, $v->width, $v->height, $filter_size[0], $filter_size[1]);
 		if ($im === false || $filter === false || $r === false)
 			return json_encode(['status' => false, 'reason' => 'failed to create initial photo']);
+		 */
+		if (!preg_match("/^\d+\.png$/", $v->image)) {
+			error_log("bad filter name: ".$v->image);
+			return json_encode(['status' => false, 'reason' => 'bad filter name']);
+		}
+		$filter = imagecreatefrompng(__DIR__."/../imgs/".$v->image);
+		if ($filter === false)
+			return json_encode(['status' => false, 'reason' => 'bad filter image']);
 		$r = imagecopy($img, $filter, $v->ofLeft, $v->ofTop, 0, 0, $v->width, $v->height);
-		error_log("dest: (".$is[0].",".$is[1].") ; filter: (".$v->width.",".$v->height.") ; offset top: ".$v->ofTop.", offset left: ".$v->ofLeft);
-		//$r = imagecopyresized($img, $im, $v->ofLeft, $v->ofTop, 0, 0, $is[0], $is[1], $v->width, $v->height);
 		if ($r === false)
 			return json_encode(['status' => false, 'reason' => 'failed to copy filter']);
 	}
@@ -195,7 +203,7 @@ $modUser = function($url) {
 		$user->setmail($post['mail']);
 	}
 	$user->setusername($post['username']);
-	if (isset($post['newpass']))
+	if (isset($post['newpass']) && strlen($post['newpass'] >= 5))
 		$user->sethash($post['newpass']);
 	$user->setnotif_mail($post['notif_mail']);
 	if (User::save($user) === true)

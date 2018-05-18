@@ -17,8 +17,9 @@ function gallery_addimgs(imgs) {
 			cards[d].remove();
 		}
 		changes = false;
-		d_gallery.offset = 5;
+		d_gallery.offset = 0;
 	}
+	var i = 0;
 	for (i in imgs) {
 		var div = void_card.cloneNode(true);
 		Object.assign(div, void_card);
@@ -38,5 +39,4 @@ btn_moreimgs.addEventListener('click', function() {
 	if (d_gallery.offset === undefined)
 		d_gallery.offset = 5;
 	api_get('/gallery/' + d_gallery.offset, gallery_addimgs);
-	d_gallery.offset += 5;
 });

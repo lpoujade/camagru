@@ -16,7 +16,6 @@ function start_cam() {
 			alternative.innerHTML = 'No cam, instead you can select a file';
 			preview.appendChild(alternative);
 		}
-		console.log("start_cam(): " + err.name + ": " + err.message);
 	});
 }
 
@@ -34,11 +33,10 @@ function take_photo() {
 	ctx.drawImage(cam, 0,0, canv.width, canv.height);
 	var calcs = [];
 	for (i in calc) {
-		calcs.push({'image': calc[i].src,
+		calcs.push({'image': calc[i].src.split('/').pop(),
 			'ofTop': calc[i].offsetTop - cam.offsetTop,
 			'ofLeft': calc[i].offsetLeft - cam.offsetLeft,
 			'width': calc[i].width, 'height': calc[i].height});
 	}
-	console.log(calcs);
-	post_form('/creation', {'photo': canv.toDataURL("image/png"), 'calcs': JSON.stringify(calcs)}, function() {console.log('image posted');});
+	post_form('/creation', {'photo': canv.toDataURL("image/png"), 'calcs': JSON.stringify(calcs)}, null);
 }

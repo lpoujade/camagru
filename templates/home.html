@@ -15,10 +15,10 @@
 					<div class="nav-wrapper">
 						<a href="" class="brand-logo">Camagru</a>
 						<ul class="right">
-							<li><a id="a_gallery" href="#gallery">Gallery</a></li>
-							<li><a id="a_create" href="#create">Create</a></li>
-							<li><a id="a_account" href="#account">Account</a></li>
-							<li><a id="a_logout" href="#logout">Logout</a></li>
+							<li><a id="a_gallery">Gallery</a></li>
+							<li><a id="a_create">Create</a></li>
+							<li><a id="a_account">Account</a></li>
+							<li><a id="a_logout">Logout</a></li>
 						</ul>
 					</div>
 				</nav>
@@ -64,15 +64,18 @@
 
 						<div id="preview" class="row valign-wrapper">
 							<video id="cam"></video>
+							<input id="creation_mask" type="file" class="btn col s3" style="display: none" />
 						</div>
 						<div id="filters" class="row">
-							<img class="masks" src="/imgs/1.png"/>
-							<img class="masks" src="/imgs/2.png"/>
-							<img class="masks" src="/imgs/3.png"/>
+							<img class="col s2 masks" src="/imgs/1.png"/>
+							<img class="col s2 masks" src="/imgs/2.png"/>
+							<img class="col s2 masks" src="/imgs/3.png"/>
+							<img class="col s2 masks" src="/imgs/4.png"/>
+							<img class="col s2 masks" src="/imgs/5.png"/>
+							<img class="col s2 masks" src="/imgs/6.png"/>
 						</div>
 
 						<form id="form_creation" class="row">
-							<input id="creation_mask" type="file" class="btn col s3" />
 							<a disabled id="btn_capture" class="waves-effect waves-light btn-large col s10">capture</a>
 							<a id="btn_clearfilters" class="waves-effect waves-light btn-large col s2">clear filters</a>
 						</form>
@@ -139,7 +142,7 @@
 							<!-- Switch -->
 							<div class="switch">
 								<label>
-									<input type="checkbox" id="notif_mail" value="1">
+									<input type="checkbox" id="notif_mail" value="0">
 									<span id="lever" class="lever"></span>Send a mail when receive comment
 								</label>
 							</div>

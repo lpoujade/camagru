@@ -1,28 +1,27 @@
 
 ## TODO
-~ gestion utilisateur
+. gestion utilisateur
 	. confirmation inscription via mail
-	~ modification pass
-	* mail de reinitialisation de mot de passe
+	. modification pass
+	. mail de reinitialisation de mot de passe
 	. modification username, mail
 	. mail, username, mot de passe(hash)
 	. deconnexion accessible partout
 
-~ galerie
-	* items triés par date
+. galerie
+	. items triés par date
 	. liste par page de 5
-	* pour users:
+	. pour users:
 		. commentaires
-		* mail quand création commentée, desactivable
+		. mail quand création commentée, desactivable
 
-* creation d'image
+~ creation d'image
 	-js 
-		* webcam ou upload photo
-		* images ajoutables à uploader
+		~ webcam ou upload photo
 		. pas de photo tant que pas d'images ajoutées
 	-php
-		* dates
-		~ traitement de l'image en php
+		. dates
+		. traitement de l'image en php
 		. comments
 		. suppressions des ses images possible
 

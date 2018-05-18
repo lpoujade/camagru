@@ -38,7 +38,6 @@ function post_form(url, datas, callback) {
 	for (i in datas) {
 		form.append(i, datas[i]);
 	}
-	console.log('post form to ' + url);
 	xhr.send(form);
 	changes = true;
 }
@@ -62,7 +61,6 @@ form_moduser.addEventListener('submit', function() {
 		'pass': mod_pass.value,
 		'notif_mail': notif_mail.value,
 		'newpass': mod_pass_new.value}, function() {
-		console.log('posted');
 	});
 });
 

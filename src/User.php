@@ -170,6 +170,7 @@ class User extends Data {
 		$user->setmail($post['mail']);
 		$user->sethash($post['pass']);
 		$user->setconfirmed(0);
+		$user->setnotif_mail(1);
 		User::save($user);
 		$token = Token::newToken($user->getid());
 		error_log("http://".$_SERVER['SERVER_NAME'].":".$_SERVER['SERVER_PORT']."/token/".$user->getid()."/".$token);
