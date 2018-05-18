@@ -1,5 +1,10 @@
 
 ## TODO
+
+* webcam: stop/relaunch/?
+* likes
+* own creation
+
 . gestion utilisateur
 	. confirmation inscription via mail
 	. modification pass
