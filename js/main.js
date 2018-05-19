@@ -1,14 +1,3 @@
-function api_get(url, callback) {
-	var xhr = new XMLHttpRequest();
-	xhr.open('GET', url);
-	xhr.setRequestHeader('Accept', 'application/json');
-	xhr.addEventListener('load', function() {
-		if (callback != null)
-			callback(JSON.parse(xhr.response));
-	});
-	xhr.send();
-}
-
 function show_elem(elem) {
 	/* hide other sections */
 	if (cam.srcObject)
@@ -39,6 +28,7 @@ handler = {
 			handler['account']();
 		else {
 			show_elem('s_create');
+			start_cam();
 			if (d_userimg.childElementCount >= 3)
 				return ;
 			api_get('/gallery/mines', function(response) {
@@ -60,7 +50,6 @@ handler = {
 					d_userimg.appendChild(div);
 				}
 			});
-			start_cam();
 		}
 	},
 	'logout': function() {
@@ -77,6 +66,7 @@ handler = {
 				mod_mail.value = response.mail;
 				mod_username.value = response.user;
 				span_username.innerHTML = response.user + " " + response.mail;
+				username = response.user;
 				if (response.notif_mail == 1 && notif_mail.value != 1) {
 					lever.click();
 				}
@@ -97,7 +87,7 @@ function check_url() {
 	last_url_elem = null;
 	if (url)
 		last_url_elem = url.pop().replace('?', '');
-	if (last_url_elem && strlen(last_url_elem) > 1 && handler[last_url_elem])
+	if (last_url_elem && last_url_elem.length > 1 && handler[last_url_elem])
 		handler[last_url_elem]();
 	else
 		handler['gallery']();
@@ -105,10 +95,13 @@ function check_url() {
 
 connected = false;
 changes = false;
+username = 'unknown';
 
-api_get('/log', function(response) {
-	if (response.status == 1)
+api_get('/log/infos', function(response) {
+	if (response.status == 1) {
 		connected = true;
+		username = response.user;
+	}
 	else
 		connected = false;
 	check_url();

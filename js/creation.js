@@ -9,18 +9,10 @@ function handleFile(files) {
 	/* show file */
 	if (typeof filters != 'undefined') {
 		var img = document.createElement("img");
-		img.classList.add("col");
-		img.classList.add("s2");
-		img.addEventListener('click', function() {
-			calc.push(this.cloneNode());
-			preview.appendChild(calc[calc.length - 1]);
-			calc[calc.length - 1].style.position = "absolute";
-			calc[calc.length - 1].style.cursor = "move";
-			dragElement(calc[calc.length - 1]);
-			btn_capture.removeAttribute("disabled");
-		});
 		img.file = file;
-		filters.appendChild(img);
+		while (preview.firstElementChild)
+			preview.removeChild(preview.firstElementChild);
+		preview.appendChild(img);
 
 		var reader = new FileReader();
 		reader.onload = (function(aImg) { return function(e) { aImg.src = e.target.result; }; })(img);
@@ -73,6 +65,4 @@ creation_mask.addEventListener('change', function() {
 	handleFile(creation_mask.files);
 });
 
-btn_capture.addEventListener('click', function() {
-	take_photo();
-});
+btn_capture.addEventListener('click', take_photo);

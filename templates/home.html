@@ -37,17 +37,17 @@
 				<div id="d_gallery">
 					<div id="d_img_0" class="col s6" style="display: none">
 						<div id="c_img_0" class="card blue-grey darken-1">
-								<img id="i_img_0" class="gal_imgs"/>
+							<img class="gal_imgs"/>
 							<div class="card-action">
 								<a class="a_likes" href="#likes" onclick='like_it(this)'>like</a>
 								<a class="_comment" href="#comment" onclick='comment_show(this)'>comment</a>
 								<div class="dul_comment" style="display: none">
 									<ul class="ul_comment collection">
 									</ul>
-									<div class="row">
+									<form id="form_sendcomment_0" class="row" action="#">
 										<input class="inp_comment col s8" type="text" />
-										<button onclick='comment_it(this)' class="btn btn-small col s4">send</button>
-									</div>
+										<button class="btn btn-small col s4" type="submit">send</button>
+									</form>
 								</div>
 							</div>
 						</div>
@@ -155,18 +155,17 @@
 
 		</div><!-- page_content -->
 
-		<!--
-	  <footer class="page-footer">
-	  <div class="container">
-	  <a class="grey-text text-lighten-4 right" href="#!">thank to Materialize.css</a>
-	  </div>
-	  </footer>
-		-->
+		<footer class="page-footer">
+			<div class="container">
+				<a class="grey-text text-lighten-4 right" href="https://materializecss.com/">thank to Materialize.css</a>
+			</div>
+		</footer>
 	</body>
+	<script src="js/api.js"></script>
 	<script src="js/comments.js"></script>
+	<script src="js/cam.js"></script>
 	<script src="js/creation.js"></script>
 	<script src="js/gallery.js"></script>
 	<script src="js/form_to_xhr.js"></script>
-	<script src="js/cam.js"></script>
 	<script src="js/main.js"></script>
 </html>

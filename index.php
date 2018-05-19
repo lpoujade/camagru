@@ -21,6 +21,14 @@ $interface = function() {
 
 $clean_post_data = function() {
 	foreach ($_POST as $k => $v) {
+		/*
+		if (strcmp($v, SQLite3::escapeString($v))) {
+			echo json_encode(['status' => false, 'reason' => "invalid characters in $k field"]);
+			error_log("invalid: from $v to ". SQLite3::escapeString($v));
+			die ;
+		}
+		 */
+		//error_log("POST cleaning: from $v to ". SQLite3::escapeString($v));
 		$_POST[$k] = SQLite3::escapeString($v);
 	}
 };

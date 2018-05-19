@@ -13,6 +13,8 @@ class Creation extends Data {
 		$this->id = $id;
 		if ($id != -1 && $user_id == -1) {
 			$r = $db->query("select * from creations where id=$id")->fetchAll();
+			if (count($r) != 1)
+				return (NULL);
 			$r = $r[0];
 			$this->image = $r['img_path'];
 			$this->user_id = $r['user_id'];

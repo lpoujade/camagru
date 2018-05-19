@@ -12,22 +12,26 @@ function comment_show(e) {
 	if (ul.childElementCount >= 1)
 		return ;
 	api_get('/comments/'+id, function(r) {
-		for (i in r) {
-			var nli = document.createElement('li');
-			nli.className = "collection-item";
-			nli.innerHTML = r[i].username +": "+r[i].content;
-			ul.appendChild(nli);
-		}
+		var e = document.getElementById('d_img_' + id);
+		e.addComment(r);
 	});
 }
 
-function comment_it(e) {
-	var id = e.parentNode.parentNode.parentNode.parentNode.parentNode.id.split('_').pop();
+function comment_it() {
+	var id = this.id.split('_').pop();
+	var com = this.firstElementChild.value;
+	this.firstElementChild.value = "";
+	console.log(this);
 	post_form('/comment',
 		{
 			'creation_id': id,
-			'content': e.previousElementSibling.value
-		}, null);
+			'content': com
+		}, function(resp) {
+			if (resp.status === true) {
+				var e = document.getElementById('d_img_' + id);
+				e.addComment([{'username': username, 'content': com}]);
+			}
+		});
 
 }
 
@@ -36,5 +40,10 @@ function like_it(e) {
 	post_form('/like',
 		{
 			'creation_id': id
-		}, null);
+		}, function(resp) {
+			if (resp.status === true) {
+				var e = document.getElementById('d_img_' + id);
+				e.newLike();
+			}
+		});
 }

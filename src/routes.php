@@ -170,7 +170,7 @@ $createItem = function($url) {
 		return json_encode(['status' => false, 'reason' => 'failed to create item']);
 	}
 	imagepng($img, $DATAS_DIR."/".$c->getid().".png");
-	return json_encode(['status' => true]);
+	return json_encode(['status' => true, 'image' => $c->toArray()]);
 };
 
 $deleteCreation = function($url) {
