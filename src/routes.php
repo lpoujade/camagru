@@ -89,21 +89,13 @@ $logUser = function($url) {
 	   	'user' => $_SESSION['user']->getusername()]);
 };
 
-$newUser = function($url) {
-	$user = User::create($_POST['mail'], $_POST['pass'], $_POST['username']);
-	if ($user === null) {
-		return json_encode(['status' => false, 'reason' => 'mail already in use']);
-	}
-	User::save($user);
-	return json_encode(['status' => true]);
-};
-
 $reinitPw = function($url) {
 	$post = htmlescape_array($_POST);
 	if (!Token::verifyToken($post['uid'], $post['token'])) {
 		$user = new User($post['uid']);
 		$user->sethash($post['new_pass']);
 		User::save($user);
+		Token::deleteToken($post['token']);
 		header('Location: /#account');
 		return ;
 	}
@@ -116,6 +108,8 @@ $forgotPw = function($url) {
 		return json_encode(['status' => false, 'reason' => 'no mail']);
 	if (!($user = User::getBy(['mail' => $post['mail_forgot']])))
 		return json_encode(['status' => false, 'reason' => 'no user with this mail']);
+	if (Token::exists($user->getid()))
+		return json_encode(['status' => false, 'reason' => 'mail already sent']);
 	$token = Token::newToken($user->getid());
 	//error_log("http://".$_SERVER['SERVER_NAME'].":".$_SERVER['SERVER_PORT']."/forgot/".$user->getid()."/".$token);
 	mail($user->getmail(), "[camagru] change your password",

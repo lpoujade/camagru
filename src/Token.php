@@ -13,7 +13,7 @@ class Token {
 
 		$r = $db->query("select token from tokens where user_id = $user_id and token = '$token'")->fetchAll();
 		if (count($r) != 1) {
-			echo "no token (or more than one token?)";
+			echo "This link seems already used.";
 			die ;
 		}
 		$res = array_pop($r);
@@ -24,5 +24,14 @@ class Token {
 		global $db;
 
 		$r = $db->exec("delete from tokens where token = '$token'");
+	}
+
+	static function exists($user_id) {
+		global $db;
+
+		$r = $db->query("delete from tokens where user_id = '$user_id'")->fetchAll();
+		if (count($r) >= 1)
+			return true;
+		return false;
 	}
 }
