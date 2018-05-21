@@ -168,15 +168,40 @@ class User extends Data {
 			return json_encode(['status' => false, 'reason' => 'mail already in use']);
 		$user->setusername($post['username']);
 		$user->setmail($post['mail']);
+		if (strlen($post['pass']) <= 5)
+			return json_encode(['status' => false, 'reason' => 'password too weak, see <a href="https://imgs.xkcd.com/comics/password_strength.png">this</a>']);
 		$user->sethash($post['pass']);
 		$user->setconfirmed(0);
 		$user->setnotif_mail(1);
 		User::save($user);
 		$token = Token::newToken($user->getid());
-		error_log("http://".$_SERVER['SERVER_NAME'].":".$_SERVER['SERVER_PORT']."/token/".$user->getid()."/".$token);
+		//error_log("http://".$_SERVER['SERVER_NAME'].":".$_SERVER['SERVER_PORT']."/token/".$user->getid()."/".$token);
 		mail($user->getmail(), "Welcome to the camagru",
 		   	"Confirm your account using this link : http://".$_SERVER['SERVER_NAME'].":".$_SERVER['SERVER_PORT']."/token/".$user->getid()."/".$token);
-		return json_encode(['status' => true, 'reason' => 'Check your mails']);
+		return json_encode(['status' => true, 'reason' => 'check your mails']);
+	}
+
+	public function saveme() {
+		global $db;
+		if ($this->confirmed != 1)
+			$this->confirmed = 0;
+		if ($this->notif_mail != 1)
+			$this->notif_mail = 0;
+		if ($this->id && $this->id != -1) {
+			$r = $db->exec("update users set
+				confirmed = $this->confirmed,
+				username = '$this->username',
+				hash = '$this->hash',
+				salt = '$this->salt',
+				mail = '$this->mail',
+				notif_mail = $this->notif_mail
+			where id = $this->id;");
+		} else {
+			$r = $db->exec("insert into users values
+				(NULL, '{$this->getnotif_mail()}', '{$this->getconfirmed()}', '{$this->getusername()}', '{$this->getmail()}', '{$this->gethash()}', '{$this->getsalt()}');");
+			$this->setid($db->lastInsertId());
+		}
+		return true;
 	}
 
 	static function save(User $c) {

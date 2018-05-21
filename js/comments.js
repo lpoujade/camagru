@@ -21,7 +21,6 @@ function comment_it() {
 	var id = this.id.split('_').pop();
 	var com = this.firstElementChild.value;
 	this.firstElementChild.value = "";
-	console.log(this);
 	post_form('/comment',
 		{
 			'creation_id': id,

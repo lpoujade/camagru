@@ -1,5 +1,9 @@
 <?php
 
+if (file_exists(__DIR__."/../datas")) {
+	echo 'Database already initialized';
+	exit ;
+}
 mkdir(__DIR__."/../datas");
 include_once("database.php");
 

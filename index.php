@@ -15,11 +15,31 @@ if (session_start() === false) {
 	exit ;
 }
 
+if (!isset($_SESSION['post_token']))
+	$_SESSION['post_token'] = bin2hex(openssl_random_pseudo_bytes(10));
+
 $interface = function() {
 	return file_get_contents('templates/home.html');
 };
 
+function htmlescape_array(array $a) {
+	foreach ($a as $k => $v) {
+		$a[$k] = htmlspecialchars($v);
+	}
+	return $a;
+}
+
 $clean_post_data = function() {
+	if (!preg_match("/\/reinit_pass/", $_SERVER['REQUEST_URI'])) {
+		if (empty($_POST['token']) || strcmp($_POST['token'], $_SESSION['post_token'])) {
+			echo json_encode(['status' => false, 'reason' => 'bad token']);
+			die ;
+		}
+		if (strncmp($_SERVER['HTTP_REFERER'], "http://".$_SERVER['HTTP_HOST'], strlen("http://".$_SERVER['HTTP_HOST']))) {
+			echo json_encode(['status' => false, 'reason' => 'bad referer']);
+			die ;
+		}
+	}
 	foreach ($_POST as $k => $v) {
 		/*
 		if (strcmp($v, SQLite3::escapeString($v))) {
@@ -29,15 +49,14 @@ $clean_post_data = function() {
 		}
 		 */
 		//error_log("POST cleaning: from $v to ". SQLite3::escapeString($v));
+		//$_POST[$k] = SQLite3::escapeString(htmlspecialchars($_POST[$k]));
 		$_POST[$k] = SQLite3::escapeString($v);
 	}
 };
 
 $website['router'] = new Router();
-
 $website['router']->get([
 	"" => $interface,
-	"mailme" => $mailMe,
 	"gallery(/mines|/\d+)?" => $gallery,
 	"comment(s)?/\d+" => $getComments,
 	"log(/infos)?" => $logPage,
@@ -45,11 +64,12 @@ $website['router']->get([
 	"token/\d+/[a-z0-9]{100}" => $verifyToken,
 	"forgot/\d+/[a-z0-9]{100}" => $forgot_verifyToken,
 	"flush_session" => function() {
-		foreach ($_SESSION as $i => $v)
-			$_SESSION[$i] = null;
+		foreach ($_SESSION as $i => $v) {
+			if (strcmp($i, "post_token"))
+				$_SESSION[$i] = null;
+		}
 		return json_encode(['status' => true, 'reason' => 'deconnected']);
 	}]);
-
 $website['router']->post([
 	"log" => $logUser,
 	"mod" => $modUser,

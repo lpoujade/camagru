@@ -126,10 +126,14 @@ class Creation extends Data {
 
 	static function remove(Creation $c) {
 		global $db;
+		global $DATAS_DIR;
 
+		$fname = $DATAS_DIR."/".$c->id.".png";
+		if (file_exists($fname))
+			unlink($fname);
 		$r = $db->exec("delete from likes where creation_id = ".$c->getid());
 		$r = $db->exec("delete from comments where creation_id = ".$c->getid());
-		$r = $db->exec("delete from creations where id={$c->getid()}");
+		$r = $db->exec("delete from creations where id=".$c->getid());
 		return $r;
 	}
 }

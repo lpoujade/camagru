@@ -4,7 +4,10 @@ calc = [];
 function handleFile(files) {
 	var file = files[0];
 
-	if (!file.type.startsWith('image/')){ alert('File not valid'); exit; }
+	if (!file.type.startsWith('image/png')){
+		notif({'status': false, 'reason': 'Bad file type, only PNG files are accepted'});
+		return;
+	}
 
 	/* show file */
 	if (typeof filters != 'undefined') {
@@ -26,28 +29,23 @@ function dragElement(elmnt) {
 
 	function dragMouseDown(e) {
 		e = e || window.event;
-		// get the mouse cursor position at startup:
 		pos3 = e.clientX;
 		pos4 = e.clientY;
 		document.onmouseup = closeDragElement;
-		// call a function whenever the cursor moves:
 		document.onmousemove = elementDrag;
 	}
 
 	function elementDrag(e) {
 		e = e || window.event;
-		// calculate the new cursor position:
 		pos1 = pos3 - e.clientX;
 		pos2 = pos4 - e.clientY;
 		pos3 = e.clientX;
 		pos4 = e.clientY;
-		// set the element's new position:
 		elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
 		elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
 	}
 
 	function closeDragElement() {
-		/* stop moving when mouse button is released:*/
 		document.onmouseup = null;
 		document.onmousemove = null;
 	}

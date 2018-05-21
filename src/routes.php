@@ -25,11 +25,13 @@ $gallery = function($url) {
 $logPage = function($url) {
 	$infos = strstr($url, "infos");
 	$user = User::getCurrentUser();
-	if ($user)
-		$r = ['status' => true,
-			'user' => $user->getusername()];
+	$r['token'] = $_SESSION['post_token'];
+	if ($user) {
+		$r['status'] = true;
+		$r['user'] = $user->getusername();
+	}
 	else
-		$r = ['status' => false];
+		$r['status'] = false;
 
 	if ($infos && $r['status'] == true) {
 		$r['mail'] = $user->getmail();
@@ -47,14 +49,6 @@ $getComments = function($url) {
 	$id = $ue[count($ue) - 1];
 	$c = Comment::getFor($id);
 	return Comment::jsonify($c);
-};
-
-$mailMe = function($url) {
-	$user = User::getCurrentUser();
-	if (!$user)
-		return json_encode(['status' => false, 'reason' => 'not connected']);
-	$r = mail($user->getMail(), "Test mail", "Welcome to the camagru");
-	return json_encode(['status' => $r]);
 };
 
 $verifyToken = function($url) {
@@ -105,7 +99,7 @@ $newUser = function($url) {
 };
 
 $reinitPw = function($url) {
-	$post = $_POST;
+	$post = htmlescape_array($_POST);
 	if (!Token::verifyToken($post['uid'], $post['token'])) {
 		$user = new User($post['uid']);
 		$user->sethash($post['new_pass']);
@@ -123,9 +117,9 @@ $forgotPw = function($url) {
 	if (!($user = User::getBy(['mail' => $post['mail_forgot']])))
 		return json_encode(['status' => false, 'reason' => 'no user with this mail']);
 	$token = Token::newToken($user->getid());
-	error_log("http://".$_SERVER['SERVER_NAME'].":".$_SERVER['SERVER_PORT']."/forgot/".$user->getid()."/".$token);
+	//error_log("http://".$_SERVER['SERVER_NAME'].":".$_SERVER['SERVER_PORT']."/forgot/".$user->getid()."/".$token);
 	mail($user->getmail(), "[camagru] change your password",
-	   	"… via this link: http://".$_SERVER['SERVER_NAME'].":".$_SERVER['SERVER_PORT']."/forgot/".$user->getid()."/".$token);
+	   	"via this link: http://".$_SERVER['SERVER_NAME'].":".$_SERVER['SERVER_PORT']."/forgot/".$user->getid()."/".$token);
 	return json_encode(['status' => true, 'reason' => 'check your mails']);
 };
 
@@ -155,7 +149,6 @@ $createItem = function($url) {
 			return json_encode(['status' => false, 'reason' => 'failed to create initial photo']);
 		 */
 		if (!preg_match("/^\d+\.png$/", $v->image)) {
-			error_log("bad filter name: ".$v->image);
 			return json_encode(['status' => false, 'reason' => 'bad filter name']);
 		}
 		$filter = imagecreatefrompng(__DIR__."/../imgs/".$v->image);
@@ -191,7 +184,7 @@ $deleteCreation = function($url) {
 };
 
 $modUser = function($url) {
-	$post = $_POST;
+	$post = htmlescape_array($_POST);
 	$user = User::getCurrentUser();
 	if (!$user)
 		return json_encode(['status' => false, 'reason' => 'not connected']);
@@ -203,17 +196,19 @@ $modUser = function($url) {
 		$user->setmail($post['mail']);
 	}
 	$user->setusername($post['username']);
-	if (isset($post['newpass']) && strlen($post['newpass'] >= 5))
+	if (!empty($post['newpass']) && strlen($post['newpass']) >= 5)
 		$user->sethash($post['newpass']);
+	else if (!empty($post['newpass']))
+		return json_encode(['status' => false, 'reason' => 'password too weak']);
 	$user->setnotif_mail($post['notif_mail']);
-	if (User::save($user) === true)
+	if ($user->saveme() === true)
 		return json_encode(['status' => true]);
    	return json_encode(['status' => false, 'reason' => 'unknow']);
 };
 
 $writeComment = function($url) {
 	$com = new Comment();
-	$post = $_POST;
+	$post = htmlescape_array($_POST);
 	$user = User::getCurrentUser();
 	if (!$user) {
 		return json_encode(['status' => false, 'reason' => 'not connected']);

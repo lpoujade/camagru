@@ -1,6 +1,6 @@
 function show_elem(elem) {
 	/* hide other sections */
-	if (cam.srcObject)
+	if (document.getElementById('cam') && cam.srcObject)
 		stop_webcam();
 	var e = document.getElementById(elem);
 	if (e.style.display != "none")
@@ -96,6 +96,7 @@ function check_url() {
 connected = false;
 changes = false;
 username = 'unknown';
+post_token = false;
 
 api_get('/log/infos', function(response) {
 	if (response.status == 1) {
@@ -104,6 +105,7 @@ api_get('/log/infos', function(response) {
 	}
 	else
 		connected = false;
+	post_token = response.token;
 	check_url();
 });
 

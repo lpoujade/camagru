@@ -49,6 +49,7 @@ function post_form(url, datas, callback) {
 	for (i in datas) {
 		form.append(i, datas[i]);
 	}
+	form.append('token', post_token);
 	xhr.send(form);
 	changes = true;
 }

@@ -1,27 +1,32 @@
 
+function no_cam(err) {
+	cam.remove();
+	if (!document.getElementById('fakewebcam')) {
+		var alternative = document.createElement('h3');
+		alternative.id = "fakewebcam";
+		alternative.className += 'center-align';
+		alternative.innerHTML = 'No cam, instead you can select a file';
+		preview.appendChild(alternative);
+		creation_mask.style.display = "";
+	}
+}
+
 function start_cam() {
-	promise = navigator.mediaDevices.getUserMedia({audio: false, video: true})
-		.then(function(mediaStream) {
-			cam.srcObject = mediaStream;
-			cam.onloadedmetadata = function(e) {
-				cam.play();
-			};
-		})
-	.catch(function(err) {
-		cam.remove();
-		if (!document.getElementById('fakewebcam')) {
-			var alternative = document.createElement('h3');
-			alternative.id = "fakewebcam";
-			alternative.className += 'center-align';
-			alternative.innerHTML = 'No cam, instead you can select a file';
-			preview.appendChild(alternative);
-			creation_mask.style.display = "";
-		}
-	});
+	if (document.getElementById('cam')) {
+		promise = navigator.mediaDevices.getUserMedia({audio: false, video: true})
+			.then(function(mediaStream) {
+				cam.srcObject = mediaStream;
+				cam.onloadedmetadata = function(e) {
+					cam.play();
+				};
+			})
+		.catch(no_cam);
+	}
 }
 
 function stop_webcam() {
-	cam.srcObject.getTracks()[0].stop()
+	if (document.getElementById('cam'))
+		cam.srcObject.getTracks()[0].stop()
 }
 
 function take_photo() {
